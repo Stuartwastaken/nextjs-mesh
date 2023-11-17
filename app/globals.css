@@ -6,6 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --early-access-bg: #c8f3ff; 
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,4 +25,38 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+/* Triangle tag style */
+.triangleTag {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 50vw;
+  height: 50vh;
+  border-top: 120px solid var(--early-access-bg); /* Height of the triangle */
+  border-left: 120px solid transparent; /* Creates the cut-out triangle shape */
+  z-index: 10;
+}
+
+/* Add content within the triangle */
+.triangleTag::content {
+  content: 'Early Access';
+  font-family: 'sans-serif';
+  color: black; /* Set text color */
+  font-size: 1.5rem; /* Adjust font size as needed */
+  font-weight: bold; /* Optional: if the font looks better bold */
+  letter-spacing: 2px; /* Adjust letter spacing to your preference */
+  text-transform: uppercase; /* Optional: if you want the text to be uppercase */
+  position: absolute; /* Position the text within the triangle */
+}
+
+
+
+
+
+/* Custom font style */
+.customFont {
+  font-family: 'YourCustomFont', sans-serif; /* Replace with the actual font name */
+  /* Add other font styling as needed to match the 'Lapse' text */
 }
