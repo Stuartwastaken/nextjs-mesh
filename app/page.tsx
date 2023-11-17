@@ -20,7 +20,7 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <h1>Mesh. Four People Together</h1>
         {/* <img src="https://nextjs-mesh-seven.vercel.app/dog.JPG" alt="Dog" /> */}
-        <Image src={dogImage.src} alt="Dog" width={600} height={500} />
+        <Image src= "https://nextjs-mesh-seven.vercel.app/dog.JPG" alt="Dog" width={919} height={1280} />
       </main>
     </>
   );
