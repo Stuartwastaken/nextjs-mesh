@@ -1,4 +1,6 @@
 import Head from "next/head";
+import dogImage from "../public/dog.png";
+import Image from "next/image"; 
 
 export default function Home() {
   return (
@@ -7,7 +9,7 @@ export default function Home() {
       <Head>
         <meta
           property="og:image"
-          content="/public/dog.jpg"
+          content={dogImage.src}
         />
         <meta property="og:description" content="Dog website" />
         <meta property="og:image:type" content="/public/dog.jpg" />
@@ -18,8 +20,7 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <h1>Mesh. Four People Together</h1>
         {/* <img src="https://nextjs-mesh-seven.vercel.app/dog.JPG" alt="Dog" /> */}
-        <img src="/public/dog.png" alt="Dog" />
-
+        <Image src={dogImage.src} alt="Dog" width={600} height={500} />
       </main>
     </>
   );
