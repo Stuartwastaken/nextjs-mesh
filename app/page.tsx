@@ -10,7 +10,7 @@ export default function Home() {
           content="https://nextjs-mesh-seven.vercel.app/dog.JPG"
         />
         <meta property="og:description" content="Dog website" />
-        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:type" content="public/dog.jpg" />
         <meta property="og:image:width" content="600" />
         <meta property="og:image:height" content="500" />
         <meta property="og:type" content="website" />
