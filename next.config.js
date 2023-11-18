@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
-
-module.exports = nextConfig
+const nextConfig = {
+    images: {
+      domains: ['nextjs-mesh-seven.vercel.app'],
+    },
+  }
+  
+  module.exports = nextConfig;
+  
