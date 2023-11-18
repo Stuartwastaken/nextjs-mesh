@@ -3,7 +3,7 @@ import Head from "next/head";
 export default function Home() {
   return (
     <>
-      <Head>
+      <head>
         <title>Mesh.</title>
         <meta property="og:title" content="Mesh. Four People Together" />
         <meta property="og:description" content="Dog website" />
@@ -15,7 +15,7 @@ export default function Home() {
         <meta property="og:image:width" content="919" /> {/* Consider adjusting these dimensions */}
         <meta property="og:image:height" content="1280" />
         <meta property="og:type" content="website" />
-      </Head>
+      </head>
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <h1>Mesh. Four People Together</h1>
       </main>
