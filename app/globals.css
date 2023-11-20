@@ -1,11 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --early-access-bg: #c8f3ff; 
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,4 +26,42 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+/* Rectangle banner style */
+.triangleTag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30vw; /* This will be 50% of the viewport width */
+  height: 120px; /* This sets a fixed height for the banner */
+  background: var(--early-access-bg); /* The background color for the banner */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 200px 100%, 0 calc(100% - 125px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+
+/* Style the text within the .triangleTag */
+.triangleTag::after {
+  content: 'Early Access';
+  font-family: 'Poppins', sans-serif; 
+  color: black; 
+  font-size: 2rem; 
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  position: absolute;
+  top: 50%; 
+  right: 2rem; 
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 10; /* Ensure the text is above other elements */
+}
+
+
+/* Custom font style */
+.customFont {
+  font-family: sans-serif;
 }
