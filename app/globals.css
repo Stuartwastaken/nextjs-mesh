@@ -27,38 +27,35 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
-
 /* Rectangle banner style */
 .triangleTag {
   position: absolute;
   top: 0;
   right: 0;
-  width: 30vw; /* This will be 50% of the viewport width */
-  height: 120px; /* This sets a fixed height for the banner */
-  background: var(--early-access-bg); /* The background color for the banner */
+  width: 35vw;
+  height: 120px;
+  background: var(--early-access-bg);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 200px 100%, 0 calc(100% - 125px));
   display: flex;
   align-items: center;
-  justify-content: center;
+  margin-left: 200;
+  justify-content: flex-end;
   z-index: 5;
+  padding: 0 3vw; /* Add horizontal padding */
 }
-
 
 /* Style the text within the .triangleTag */
 .triangleTag::after {
   content: 'Early Access';
-  font-family: 'Poppins', sans-serif; 
-  color: black; 
-  font-size: 2rem; 
+  font-family: 'Poppins', sans-serif;
+  color: black;
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  position: absolute;
-  top: 50%; 
-  right: 2rem; 
-  transform: translateX(-50%) translateY(-50%);
-  z-index: 10; /* Ensure the text is above other elements */
+  z-index: 10;
 }
+
 
 
 /* Custom font style */
