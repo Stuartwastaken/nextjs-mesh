@@ -6,9 +6,9 @@ import Head from "next/head";
 export default function Home() {
   return (
     <>
-      <Head>
+      {/* <Head> */}
         <title>Mesh.</title>
-        <head>
+        {/* <head> */}
           <meta property="og:title" content="Mesh. Four People Together" />
           <meta property="og:description" content="Dog website" />
           <meta
@@ -19,8 +19,8 @@ export default function Home() {
           <meta property="og:image:width" content="919" />
           <meta property="og:image:height" content="1280" />
           <meta property="og:type" content="website" />
-        </head>
-      </Head>
+        {/* </head> */}
+      {/* </Head> */}
       <main className="bg-black min-h-screen text-white flex flex-col items-center justify-center px-8 p-48">
         <div className="triangleTag" />
         <h1 className="customFont text-6xl font-bold mb-12 uppercase">Mesh</h1>{" "}
