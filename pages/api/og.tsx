@@ -1,9 +1,12 @@
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
+export const config = {
+  runtime: 'experimental-edge',
+};
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+// This should be the default export
+export default async function handler(req: Request) {
+  const { searchParams } = new URL(req.url);
   const username = searchParams.get('username');
 
   if (!username) {
@@ -18,8 +21,7 @@ export async function GET(request: Request) {
     if (!res.ok) {
       throw new Error(`Failed to fetch GitHub image for user ${username}`);
     }
-    const imageBuffer = await res.arrayBuffer();
-    // If image fetch is successful, proceed to return the image response
+    // Proceed to return the image response
     return new ImageResponse(
       (
         <div
