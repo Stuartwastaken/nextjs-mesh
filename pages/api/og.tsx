@@ -1,46 +1,54 @@
-// pages/api/ogp-image.js
+import { ImageResponse } from '@vercel/og';
 import { NextRequest } from "next/server";
-import { ImageResponse } from "@vercel/og";
 
 export const config = {
   runtime: "experimental-edge",
 };
 
-export default async function handler(req) {
+export default async function handler(req: NextRequest) {
   try {
-    // Extracting the user's name and the image URL from the query parameters.
-    // You would have your own validation and parsing logic here.
-    const { searchParams } = new URL(req.url);
-    const name = searchParams.get('name') || 'Stuart Ray';
-    const imageUrl = searchParams.get('image') || 'https://firebasestorage.googleapis.com/v0/b/mesh-8f209.appspot.com/o/users%2Fu8REO6psKYUtSt6To23GdyHs68w2%2Fuploads%2F1674106437989398.jpg?alt=media&token=4181015c-a024-47dc-86dc-7b483900c04c';
-
-    // Fetch the image from the URL.
-    const imageArrayBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
+    // Fetch the image and convert it to an array buffer.
+    const imageUrl = "https://avatars.githubusercontent.com/u/88628337?v=4"; // Replace with your image URL
+    const imageBuffer = await fetch(imageUrl).then(res => res.arrayBuffer());
 
     return new ImageResponse(
       (
         <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#fff',
-          fontSize: 32,
-          fontWeight: 600,
-        }}
-      >
-                    <img src={'https://firebasestorage.googleapis.com/v0/b/mesh-8f209.appspot.com/o/users%2Fu8REO6psKYUtSt6To23GdyHs68w2%2Fuploads%2F1674106437989398.jpg?alt=media&token=4181015c-a024-47dc-86dc-7b483900c04c'} alt="Profile" height={250} width={250} />
-      
-        <div style={{ marginTop: 40 }}>Join Stuart Ray Tonight</div>
-      </div>
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+            height: '100%',
+            padding: '50px', 
+            boxSizing: 'border-box',
+            color: '#000', 
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '16px',
+            background: "#ccd8eb"
+          }}
+        >
+          <div style={{ fontSize: '24px', fontWeight: 'bold' }}>Stuart</div>
+
+          <img
+            src={`data:image/jpeg;base64,${Buffer.from(imageBuffer).toString('base64')}`}
+            alt="Profile"
+            style={{
+              width: '250px',
+              height: '250px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: '3px solid #000',
+            }}
+          />
+
+          <div>Join me on Mesh Tonight!</div>
+        </div>
       ),
       {
-        width: 1200,
-        height: 630,
-        // Define additional properties if needed
+        width: 480, // Adjust width to match your preference
+        height: 770, // Adjust height to match your preference
       }
     );
   } catch (error) {
