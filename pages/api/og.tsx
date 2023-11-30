@@ -7,8 +7,7 @@ export const config = {
 
 export default async function handler(req: NextRequest) {
   try {
-    // Fetch the image and convert it to an array buffer.
-    const imageUrl = "https://avatars.githubusercontent.com/u/88628337?v=4"; // Replace with your image URL
+    const imageUrl = "https://avatars.githubusercontent.com/u/88628337?v=4";
     const imageBuffer = await fetch(imageUrl).then(res => res.arrayBuffer());
 
     return new ImageResponse(
@@ -25,11 +24,12 @@ export default async function handler(req: NextRequest) {
             boxSizing: 'border-box',
             color: '#000', 
             fontFamily: 'Arial, sans-serif',
+            background: "#ccd8eb",
             fontSize: '16px',
-            background: "#ccd8eb"
+            fontWeight: 'bolder',
           }}
         >
-          <div style={{ fontSize: '24px', fontWeight: 'bold' }}>Stuart</div>
+          <div style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '20px' }}>Stuart</div>
 
           <img
             src={`data:image/jpeg;base64,${Buffer.from(imageBuffer).toString('base64')}`}
@@ -39,16 +39,16 @@ export default async function handler(req: NextRequest) {
               height: '250px',
               borderRadius: '50%',
               objectFit: 'cover',
-              border: '3px solid #000',
+              border: '5px solid #000',
             }}
           />
 
-          <div>Join me on Mesh Tonight!</div>
+          <div style={{ fontSize: '30px', fontWeight: 'bold', marginTop: '20px' }}>Join me on Mesh Tonight!</div>
         </div>
       ),
       {
-        width: 480, // Adjust width to match your preference
-        height: 770, // Adjust height to match your preference
+        width: 550,
+        height: 750,
       }
     );
   } catch (error) {
