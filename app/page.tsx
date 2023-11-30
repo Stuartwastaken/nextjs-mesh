@@ -2,15 +2,14 @@ import Image from "next/image";
 import qrCodeImage from "../public/qr_code_barcode.png";
 
 export default function Home() {
+  const ogImageUrl = 'https://https://nextjs-mesh-seven.vercel.app/api/og';
+
   return (
     <>
       <title>Mesh.</title>
       <meta property="og:title" content="Mesh. Four People Together" />
       <meta property="og:description" content="Dog website" />
-      <meta
-        property="og:image"
-        content="https://nextjs-mesh-seven.vercel.app/dog.png"
-      />
+      <meta property="og:image" content={ogImageUrl} />
       <meta property="og:image:type" content="image/png" />
       <meta property="og:image:width" content="919" />
       <meta property="og:image:height" content="1280" />
