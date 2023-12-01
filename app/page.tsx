@@ -1,6 +1,7 @@
 import Image from "next/image";
 import qrCodeImage from "../public/qr_code_barcode.png";
 import Head from 'next/head';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 
 type HomeProps = {
   username: string;
@@ -36,14 +37,13 @@ export default function Home({ username }: HomeProps) {
   );
 }
 
-export async function getServerSideProps(context) {
-  // Extract the username from the query parameters
-  const { query } = context;
-  const username = query.username || 'defaultUsername'; // Provide a default username if none is provided
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+  const username = context.query.username as string || 'defaultUsername';
   
   return {
     props: {
       username,
     },
   };
-}
+};
+
