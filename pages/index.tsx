@@ -19,8 +19,8 @@ export default function Home({ username }: HomeProps) {
         <meta property="og:description" content="Connect and collaborate on Mesh." />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image:width" content="630" />
+        <meta property="og:image:height" content="1200" />
         <meta property="og:type" content="website" />
       </Head>
       <main className="bg-black min-h-screen text-white flex flex-col items-center justify-center px-8 p-48">
