@@ -34,9 +34,13 @@ export default async function handler(req: Request) {
   }
 
   try {
-    const res = await fetch(imageUrl);
-    if (!res.ok) throw new Error(`Failed to fetch image for user ${name}`);
-
+    console.log('Attempting to fetch image URL:', imageUrl); // Temporary log for debugging
+  const res = await fetch(imageUrl);
+  if (!res.ok) {
+    console.error('Failed to fetch image. Status:', res.status, 'Status Text:', res.statusText);
+    throw new Error(`Failed to fetch image for user ${name}. Status: ${res.status}`);
+  }
+  
     const buffer = await res.arrayBuffer();
     const base64 = Buffer.from(buffer).toString("base64");
     const dataUrl = `data:image/png;base64,${base64}`;
