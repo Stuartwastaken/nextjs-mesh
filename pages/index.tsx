@@ -26,7 +26,7 @@ export default function Home({ userRef, outingType, outingTime, pfp, name }: Hom
   useEffect(() => {
     // Perform the redirect only in the browser
     if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
-      const deepLinkURL = `mesh://nextjs-mesh-seven.vercel.app/acceptFriendRequest?userRef=7sDsEWsvysMLg1ZyO0tyme8qBUH3&username=dog`;
+      const deepLinkURL = `mesh://nextjs-mesh-seven.vercel.app/acceptFriendRequest?userRef=${userRef}&username=dog`;
       window.location.href = deepLinkURL;
     }
   }, [userRef]);
