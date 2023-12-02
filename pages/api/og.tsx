@@ -9,24 +9,32 @@ export default async function handler(req: Request) {
   const url = new URL(req.url);
   const { searchParams } = url;
 
-  const username = searchParams.get("username") || "dog";
-  const name = searchParams.get("name") || 'nope';
-  const lobbyTime = searchParams.get("outingTime") || "lobbyTonight";
-  const userRef = searchParams.get("userRef") || "";
+  const username = searchParams.get("username") || "na";
+  const name = searchParams.get("name") || 'na';
+  const userRef = searchParams.get("userRef") || "na";
+  const route = searchParams.get("route") || "na"
   const imageUrl =
-    searchParams.get("pfp") || `https://github.com/${username}.png`;
-  const outingType = searchParams.get("outingType") || "dinner";
+    searchParams.get("pfp") || `na`;
+  const outingType = searchParams.get("outingType") || "na";
   const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
 
   const fontData = await fetch(
     new URL("../../public/TYPEWR__.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
 
-  if (!username) {
-    return new ImageResponse(<>Visit with &quot;?username=vercel&quot;</>, {
-      width: 1155,
-      height: 690,
-    });
+  let lobbyTime = "tonight";
+
+  if(route == "lobbyTomorrow"){
+    lobbyTime = "tomorrow";
+  }
+
+  let topText = `Join ${name}`;
+  let bottomText = `Join me for ${outingType} on Mesh ${lobbyTime}!`;
+
+
+  if(route == "acceptFriendRequest"){
+    topText = 'Accept Friend Request';
+    bottomText = `${name} is inviting you to join Mesh!`
   }
 
   try {
@@ -64,7 +72,7 @@ export default async function handler(req: Request) {
           <div
             style={{ fontSize: "92px", fontWeight: 700, marginBottom: "100px" }}
           >
-            {name}
+            {topText}
           </div>
 
           <img
@@ -79,7 +87,7 @@ export default async function handler(req: Request) {
           />
 
           <div style={{ fontSize: "32px", fontWeight: 500, marginTop: 200 }}>
-            {`Join me for ${outingType} on Mesh ${lobbyTime}!`}
+            {bottomText}
           </div>
         </div>
       ),

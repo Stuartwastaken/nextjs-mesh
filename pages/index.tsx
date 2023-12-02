@@ -8,25 +8,25 @@ import { useRouter } from 'next/router';
 type HomeProps = {
   userRef: string; // userRef
   outingType: string; // coffee, dinner, or drinks
-  outingTime: string; // today or tomorrow
   pfp: string // url of image
   name: string; // user's name
+  route: string; // lobbytn lobbytom accept friend req
 };
 
-export default function Home({ userRef, outingType, outingTime, pfp, name }: HomeProps) {
+export default function Home({ userRef, outingType, pfp, name, route }: HomeProps) {
   const baseUrl = 'https://nextjs-mesh-seven.vercel.app/';
   const ogImageUrl = `${baseUrl}/api/og?` +
   `userRef=${encodeURIComponent(userRef)}&` +
   `outingType=${encodeURIComponent(outingType)}&` +
-  `outingTime=${encodeURIComponent(outingTime)}&` +
   `pfp=${encodeURIComponent(pfp)}&` +
-  `name=${encodeURIComponent(name)}`;
+  `name=${encodeURIComponent(name)}` +
+  `route=${encodeURIComponent(route)}`;
   const router = useRouter();
 
   useEffect(() => {
     // Perform the redirect only in the browser
     if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
-      const deepLinkURL = `mesh://nextjs-mesh-seven.vercel.app/acceptFriendRequest?userRef=${userRef}&username=dog`;
+      const deepLinkURL = `mesh://nextjs-mesh-seven.vercel.app/${route}?userRef=${userRef}&username=dog`;
       window.location.href = deepLinkURL;
     }
   }, [userRef]);
@@ -58,19 +58,19 @@ export default function Home({ userRef, outingType, outingTime, pfp, name }: Hom
 }
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-  const username = context.query.username as string || 'stuartwastaken';
-  const outingType = context.query.outingType as string || 'dinner';
-  const outingTime = context.query.outingTime as string || 'today';
-  const pfp = context.query.pfp as string || 'https://github.com/stuartwastaken.png';
-  const name = context.query.name as string || 'Stuart Ray';
+  const username = context.query.username as string || 'na';
+  const outingType = context.query.outingType as string || 'na';
+  const pfp = context.query.pfp as string || 'na';
+  const name = context.query.name as string || 'na';
+  const route = context.query.route as string || 'na';
 
   return {
     props: {
       username,
       outingType,
-      outingTime,
       pfp,
       name,
+      route,
     },
   };
 };
