@@ -9,30 +9,26 @@ export default async function handler(req: Request) {
   const url = new URL(req.url);
   const { searchParams } = url;
 
-
-  const name = searchParams.get("name") || 'na';
-  const route = searchParams.get("route") || 'na';
-  const imageUrl = searchParams.get("pfp") || 'na';
-  const outingType = searchParams.get("outingType") || 'na';
-  // const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
+  const name = searchParams.get("name") || "na";
+  const route = searchParams.get("route") || "na";
+  const imageUrl = searchParams.get("pfp") || "na";
+  const outingType = searchParams.get("outingType") || "na";
 
   const fontData = await fetch(
     new URL("../../public/TYPEWR__.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
 
   let lobbyTime = "tonight";
-
-  if(route == "lobbyTomorrow"){
+  if (route == "lobbyTomorrow") {
     lobbyTime = "tomorrow";
   }
 
   let topText = `Join ${name}`;
   let bottomText = `Join me for ${outingType} on Mesh ${lobbyTime}!`;
 
-
-  if(route == "acceptFriendRequest"){
-    topText = 'Accept Friend Request';
-    bottomText = `${name} is inviting you to join Mesh!`
+  if (route == "acceptFriendRequest") {
+    topText = "Accept Friend Request";
+    bottomText = `${name} is inviting you to join Mesh!`;
   }
 
   try {
@@ -42,6 +38,7 @@ export default async function handler(req: Request) {
     const buffer = await res.arrayBuffer();
     const base64 = Buffer.from(buffer).toString("base64");
     const dataUrl = `data:image/png;base64,${base64}`;
+
     return new ImageResponse(
       (
         <div
@@ -57,7 +54,7 @@ export default async function handler(req: Request) {
           }}
         >
           <img
-            src={imageUrl}
+            src={dataUrl}
             style={{
               position: "absolute",
               width: "100%",
@@ -74,7 +71,7 @@ export default async function handler(req: Request) {
           </div>
 
           <img
-            src={imageUrl}
+            src={dataUrl}
             style={{
               width: "256px",
               height: "256px",
