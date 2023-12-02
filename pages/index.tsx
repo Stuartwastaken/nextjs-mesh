@@ -18,7 +18,7 @@ export default function Home({ userRef, outingType, pfp, name, route }: HomeProp
   const ogImageUrl = `${baseUrl}/api/og?` +
   `outingType=${encodeURIComponent(outingType)}&` +
   `pfp=${encodeURIComponent(pfp)}&` +
-  `name=${encodeURIComponent(name)}` +
+  `name=${encodeURIComponent(name)}&` +
   `route=${encodeURIComponent(route)}`;
   const router = useRouter();
 
