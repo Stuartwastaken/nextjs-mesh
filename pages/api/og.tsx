@@ -2,17 +2,29 @@ import { ImageResponse } from "next/og";
 import React from "react";
 
 export const config = {
-  runtime: "experimental-edge",
+  runtime: "edge",
 };
+
+function fromHexString(hexStr: string) {
+  const hex = hexStr.toString();
+  let str = "";
+  for (let i = 0; i < hex.length; i += 2) {
+    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+  }
+  console.log("decrypted", str);
+  return str;
+}
 
 export default async function handler(req: Request) {
   const url = new URL(req.url);
   const { searchParams } = url;
 
-  const name = searchParams.get("name") || 'na';
-  const route = searchParams.get("route") || 'na';
-  const imageUrl = searchParams.get("pfp") || 'na';
-  const outingType = searchParams.get("outingType") || 'na';
+  const name = searchParams.get("name") || "na";
+  const route = searchParams.get("route") || "na";
+  const encodedURL = searchParams.get("pfp") || "na";
+  const imageUrl = fromHexString(encodedURL);
+
+  const outingType = searchParams.get("outingType") || "na";
 
   const fontData = await fetch(
     new URL("../../public/TYPEWR__.ttf", import.meta.url)
@@ -20,27 +32,33 @@ export default async function handler(req: Request) {
 
   let lobbyTime = "tonight";
 
-  if(route == "lobbyTomorrow"){
+  if (route == "lobbyTomorrow") {
     lobbyTime = "tomorrow";
   }
 
   let topText = `Join ${name}`;
   let bottomText = `Join me for ${outingType} on Mesh ${lobbyTime}!`;
 
-
-  if(route == "acceptFriendRequest"){
-    topText = 'Accept Friend Request';
-    bottomText = `${name} is inviting you to join Mesh!`
+  if (route == "acceptFriendRequest") {
+    topText = "Accept Friend Request";
+    bottomText = `${name} is inviting you to join Mesh!`;
   }
 
   try {
-    console.log('Attempting to fetch image URL:', imageUrl); // Temporary log for debugging
-  const res = await fetch(imageUrl);
-  if (!res.ok) {
-    console.error('Failed to fetch image. Status:', res.status, 'Status Text:', res.statusText);
-    throw new Error(`Failed to fetch image for user ${name}. Status: ${res.status}`);
-  }
-  
+    console.log("Attempting to fetch image URL:", imageUrl); // Temporary log for debugging
+    const res = await fetch(imageUrl);
+    if (!res.ok) {
+      console.error(
+        "Failed to fetch image. Status:",
+        res.status,
+        "Status Text:",
+        res.statusText
+      );
+      throw new Error(
+        `Failed to fetch image for user ${name}. Status: ${res.status}`
+      );
+    }
+
     const buffer = await res.arrayBuffer();
     const base64 = Buffer.from(buffer).toString("base64");
     const dataUrl = `data:image/png;base64,${base64}`;
