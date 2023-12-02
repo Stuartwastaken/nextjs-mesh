@@ -11,9 +11,9 @@ export default async function handler(req: Request) {
 
 
   const name = searchParams.get("name") || 'na';
-  const route = searchParams.get("route") || "na"
-  const imageUrl = searchParams.get("pfp") || `na`;
-  const outingType = searchParams.get("outingType") || "na";
+  const route = searchParams.get("route") || 'na';
+  const imageUrl = searchParams.get("pfp") || 'na';
+  const outingType = searchParams.get("outingType") || 'na';
   // const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
 
   const fontData = await fetch(
