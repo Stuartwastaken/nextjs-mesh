@@ -32,10 +32,10 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  width: 35vw;
-  height: 120px;
+  width: 240px;
+  height: 240px;
   background: var(--early-access-bg);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 200px 100%, 0 calc(100% - 125px));
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 240px 100%, 0 calc(100% - 240px));
   display: flex;
   align-items: center;
   margin-left: 200;
@@ -49,11 +49,20 @@ body {
   content: 'Early Access';
   font-family: 'Poppins', sans-serif;
   color: black;
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   z-index: 10;
+  position: inherit;
+  /* rotate the text 45 degrees */
+  transform: rotate(45deg);
+  /* move the tag text to be up about 50% from the bottom of the tag */
+  /* this is a bit of a hack, but it works */
+  margin-top: -10%;
+  /* move the tag text to be up about 50% from the right of the tag */
+  /* this is a bit of a hack, but it works */
+  margin-right: -20%;
 }
 
 
