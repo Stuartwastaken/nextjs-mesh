@@ -9,14 +9,12 @@ export default async function handler(req: Request) {
   const url = new URL(req.url);
   const { searchParams } = url;
 
-  const username = searchParams.get("username") || "na";
+
   const name = searchParams.get("name") || 'na';
-  const userRef = searchParams.get("userRef") || "na";
   const route = searchParams.get("route") || "na"
-  const imageUrl =
-    searchParams.get("pfp") || `na`;
+  const imageUrl = searchParams.get("pfp") || `na`;
   const outingType = searchParams.get("outingType") || "na";
-  const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
+  // const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
 
   const fontData = await fetch(
     new URL("../../public/TYPEWR__.ttf", import.meta.url)
@@ -39,7 +37,7 @@ export default async function handler(req: Request) {
 
   try {
     const res = await fetch(imageUrl);
-    if (!res.ok) throw new Error(`Failed to fetch image for user ${username}`);
+    if (!res.ok) throw new Error(`Failed to fetch image for user ${name}`);
 
     const buffer = await res.arrayBuffer();
     const base64 = Buffer.from(buffer).toString("base64");
@@ -107,7 +105,7 @@ export default async function handler(req: Request) {
   } catch (error) {
     console.error(error);
     return new ImageResponse(
-      <>Error: Failed to fetch image for user {username}</>,
+      <>Error: Failed to fetch image for user {name}</>,
       {
         width: 1155,
         height: 690,

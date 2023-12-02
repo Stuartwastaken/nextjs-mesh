@@ -16,7 +16,6 @@ type HomeProps = {
 export default function Home({ userRef, outingType, pfp, name, route }: HomeProps) {
   const baseUrl = 'https://nextjs-mesh-seven.vercel.app/';
   const ogImageUrl = `${baseUrl}/api/og?` +
-  `userRef=${encodeURIComponent(userRef)}&` +
   `outingType=${encodeURIComponent(outingType)}&` +
   `pfp=${encodeURIComponent(pfp)}&` +
   `name=${encodeURIComponent(name)}` +
@@ -24,9 +23,10 @@ export default function Home({ userRef, outingType, pfp, name, route }: HomeProp
   const router = useRouter();
 
   useEffect(() => {
+    // needs outing type
     // Perform the redirect only in the browser
     if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
-      const deepLinkURL = `mesh://nextjs-mesh-seven.vercel.app/${route}?userRef=${userRef}&username=dog`;
+      const deepLinkURL = `mesh://nextjs-mesh-seven.vercel.app/${route}?userRef=${userRef}`;
       window.location.href = deepLinkURL;
     }
   }, [userRef]);
