@@ -2,6 +2,8 @@ import Image from "next/image";
 import qrCodeImage from "../public/qr_code_barcode.png";
 import Head from 'next/head';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 type HomeProps = {
   username: string;
@@ -10,6 +12,15 @@ type HomeProps = {
 export default function Home({ username }: HomeProps) {
   const baseUrl = 'https://nextjs-mesh-seven.vercel.app/';
   const ogImageUrl = `${baseUrl}/api/og?username=${encodeURIComponent(username)}`;
+  const router = useRouter();
+
+  useEffect(() => {
+    // Perform the redirect only in the browser
+    if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
+      const deepLinkURL = `mesh://nextjs-mesh-seven.vercel.app/acceptFriendRequest?userRef=7sDsEWsvysMLg1ZyO0tyme8qBUH3&username=dog`;
+      window.location.href = deepLinkURL;
+    }
+  }, [username]);
 
   return (
     <>
