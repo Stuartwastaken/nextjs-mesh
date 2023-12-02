@@ -36,7 +36,6 @@ export default async function handler(req: Request) {
   }
 
   try {
-    const imageUrl = `https://github.com/${username}.png`;
     const res = await fetch(imageUrl);
     if (!res.ok) throw new Error(`Failed to fetch image for user ${username}`);
 
