@@ -5,14 +5,24 @@ export const config = {
   runtime: "experimental-edge",
 };
 
-// This should be the default export
 export default async function handler(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const username = searchParams.get("username") || 'dog';
+  const url = new URL(req.url);
+  const { searchParams } = url;
+
+  const username = searchParams.get("username") || "dog";
+  const lobbyTime = searchParams.get("outingTime") || "lobbyTonight";
+  const userRef = searchParams.get("userRef") || "";
   const imageUrl =
-    searchParams.get("image") || `https://github.com/${username}.png`;
-  const outingType = searchParams.get("outingType");
+    searchParams.get("pfp") || `https://github.com/${username}.png`;
+  const outingType = searchParams.get("outingType") || "dinner";
   const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
+
+  let time = "tonight";
+
+  if (lobbyTime == "lobbyTomorrow") {
+    time = "tomorrow";
+  }
+
   const fontData = await fetch(
     new URL("../../public/TYPEWR__.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
@@ -32,7 +42,6 @@ export default async function handler(req: Request) {
     const buffer = await res.arrayBuffer();
     const base64 = Buffer.from(buffer).toString("base64");
     const dataUrl = `data:image/png;base64,${base64}`;
-    // Proceed to return the image response
     return new ImageResponse(
       (
         <div
@@ -76,7 +85,7 @@ export default async function handler(req: Request) {
           />
 
           <div style={{ fontSize: "32px", fontWeight: 500, marginTop: 200 }}>
-            Join me on Mesh Tonight!
+            {`Join me for ${outingType} on Mesh ${time}!`}
           </div>
         </div>
       ),
@@ -94,7 +103,6 @@ export default async function handler(req: Request) {
       }
     );
   } catch (error) {
-
     console.error(error);
     return new ImageResponse(
       <>Error: Failed to fetch image for user {username}</>,

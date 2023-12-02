@@ -6,12 +6,21 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 type HomeProps = {
-  username: string;
+  userRef: string; // userRef
+  outingType: string; // coffee, dinner, or drinks
+  outingTime: string; // today or tomorrow
+  pfp: string // url of image
+  name: string; // user's name
 };
 
-export default function Home({ username }: HomeProps) {
+export default function Home({ userRef, outingType, outingTime, pfp, name }: HomeProps) {
   const baseUrl = 'https://nextjs-mesh-seven.vercel.app/';
-  const ogImageUrl = `${baseUrl}/api/og?username=${encodeURIComponent(username)}`;
+  const ogImageUrl = `${baseUrl}/api/og?` +
+  `userRef=${encodeURIComponent(userRef)}&` +
+  `outingType=${encodeURIComponent(outingType)}&` +
+  `outingTime=${encodeURIComponent(outingTime)}&` +
+  `pfp=${encodeURIComponent(pfp)}&` +
+  `name=${encodeURIComponent(name)}`;
   const router = useRouter();
 
   useEffect(() => {
@@ -20,7 +29,7 @@ export default function Home({ username }: HomeProps) {
       const deepLinkURL = `mesh://nextjs-mesh-seven.vercel.app/acceptFriendRequest?userRef=7sDsEWsvysMLg1ZyO0tyme8qBUH3&username=dog`;
       window.location.href = deepLinkURL;
     }
-  }, [username]);
+  }, [userRef]);
 
   return (
     <>
@@ -49,11 +58,19 @@ export default function Home({ username }: HomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-  const username = context.query.username as string || 'defaultUsername';
-  
+  const username = context.query.username as string || 'stuartwastaken';
+  const outingType = context.query.outingType as string || 'dinner';
+  const outingTime = context.query.outingTime as string || 'today';
+  const pfp = context.query.pfp as string || 'https://github.com/stuartwastaken.png';
+  const name = context.query.name as string || 'Stuart Ray';
+
   return {
     props: {
       username,
+      outingType,
+      outingTime,
+      pfp,
+      name,
     },
   };
 };
