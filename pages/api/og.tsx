@@ -10,6 +10,7 @@ export default async function handler(req: Request) {
   const { searchParams } = url;
 
   const username = searchParams.get("username") || "dog";
+  const name = searchParams.get("name") || 'nope';
   const lobbyTime = searchParams.get("outingTime") || "lobbyTonight";
   const userRef = searchParams.get("userRef") || "";
   const imageUrl =
@@ -70,7 +71,7 @@ export default async function handler(req: Request) {
           <div
             style={{ fontSize: "92px", fontWeight: 700, marginBottom: "100px" }}
           >
-            {username}
+            {name}
           </div>
 
           <img
