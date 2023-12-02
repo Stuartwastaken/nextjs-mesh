@@ -88,7 +88,7 @@ export default async function handler(req: Request) {
             }}
           />
           <div
-            style={{ fontSize: "92px", fontWeight: 700, marginBottom: "100px" }}
+            style={{ fontSize: "72px", fontWeight: 700, marginBottom: "100px" }}
           >
             {topText}
           </div>
