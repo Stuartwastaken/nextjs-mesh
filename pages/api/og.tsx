@@ -18,12 +18,6 @@ export default async function handler(req: Request) {
   const outingType = searchParams.get("outingType") || "dinner";
   const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
 
-  let time = "tonight";
-
-  if (lobbyTime == "lobbyTomorrow") {
-    time = "tomorrow";
-  }
-
   const fontData = await fetch(
     new URL("../../public/TYPEWR__.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
@@ -85,7 +79,7 @@ export default async function handler(req: Request) {
           />
 
           <div style={{ fontSize: "32px", fontWeight: 500, marginTop: 200 }}>
-            {`Join me for ${outingType} on Mesh ${time}!`}
+            {`Join me for ${outingType} on Mesh ${lobbyTime}!`}
           </div>
         </div>
       ),
