@@ -34,7 +34,7 @@ export default function Home({
     // needs outing type
     // Perform the redirect only in the browser
     if (typeof window !== "undefined" && window.location.protocol !== "mesh:") {
-      const deepLinkURL = `mesh://nextjs-mesh-seven.vercel.app/${route}?userRef=${userRef}`;
+      const deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&outingType=${outingType}&pfp=${pfp}&name=${name}`;
       window.location.href = deepLinkURL;
     }
   }, [userRef]);
