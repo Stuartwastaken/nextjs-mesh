@@ -56,7 +56,10 @@ export default function Home({
       </Head>
       <main className="bg-black min-h-screen text-white flex flex-col items-center justify-center px-8 p-48">
         <div className="triangleTag" />
-        <h1 className="customFont text-6xl font-bold mb-12 uppercase">${userRef}</h1>
+        <h1 className="customFont text-6xl font-bold mb-12 uppercase">userRef: {userRef}</h1>
+        <h1 className="customFont text-6xl font-bold mb-12 uppercase">outingType: {outingType}</h1>
+        <h1 className="customFont text-6xl font-bold mb-12 uppercase">pfp: {pfp}</h1>
+        <h1 className="customFont text-6xl font-bold mb-12 uppercase">name: {name}</h1>
         <div className="flex flex-col items-center justify-center mb-12">
           <Image src={qrCodeImage} alt="QR Code" width={600} className="mb-4" />
         </div>
