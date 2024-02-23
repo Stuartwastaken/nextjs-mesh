@@ -77,6 +77,7 @@ export const getServerSideProps: GetServerSideProps = async (
   const pfp = (context.query.pfp as string) || "na";
   const name = (context.query.name as string) || "na";
   const route = (context.query.route as string) || "na";
+  const userRef = (context.query.userRef as string) || "na";
 
   return {
     props: {
@@ -85,6 +86,7 @@ export const getServerSideProps: GetServerSideProps = async (
       pfp,
       name,
       route,
+      userRef,
     },
   };
 };
