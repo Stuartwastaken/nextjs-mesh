@@ -15,7 +15,15 @@ type HomeProps = {
 
 export default function Home({ userRef, outingType, pfp, name, route }: HomeProps) {
   const [qrCodeImage, setQrCodeImage] = useState(null);
+  const baseUrl = "https://nextjs-mesh-seven.vercel.app/";
 
+  const ogImageUrl = `${baseUrl}/api/og?` +
+  `outingType=${encodeURIComponent(outingType)}&` +
+  `pfp=${encodeURIComponent(pfp)}&` +
+  `name=${encodeURIComponent(name)}&` +
+  `route=${encodeURIComponent(route)}`;
+
+  
   useEffect(() => {
     const deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&outingType=${outingType}&pfp=${pfp}&name=${name}`;
     
@@ -34,7 +42,7 @@ export default function Home({ userRef, outingType, pfp, name, route }: HomeProp
         <title>Mesh.</title>
         <meta property="og:title" content="Mesh. Four People Together" />
         <meta property="og:description" content="Connect and collaborate on Mesh." />
-        <meta property="og:image" content="/path/to/your/og-image.png" />
+        <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="630" />
         <meta property="og:image:height" content="1200" />
