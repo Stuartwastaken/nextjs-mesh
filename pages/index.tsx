@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Head from 'next/head';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import { generateQRCode } from './utils/generateQRCode';
+import { generateQRCode } from '../lib/validations/utils/generateQRCode';
 
 type HomeProps = {
   userRef: string;
