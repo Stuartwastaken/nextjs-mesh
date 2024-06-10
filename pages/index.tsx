@@ -1,54 +1,40 @@
-import Image from "next/image";
-import qrCodeImage from "../public/qr_code_barcode.png";
-import Head from "next/head";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Head from 'next/head';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
+import { generateQRCode } from './utils/generateQRCode';
 
 type HomeProps = {
-  userRef: string; // userRef
-  outingType: string; // coffee, dinner, or drinks
-  pfp: string; // url of image
-  name: string; // user's name
-  route: string; // lobbytn lobbytom accept friend req
+  userRef: string;
+  outingType: string;
+  pfp: string;
+  name: string;
+  route: string;
 };
 
-
-export default function Home({
-  userRef,
-  outingType,
-  pfp,
-  name,
-  route,
-}: HomeProps) {
-  const baseUrl = "https://nextjs-mesh-seven.vercel.app/";
-
-  const ogImageUrl = `${baseUrl}/api/og?` +
-  `outingType=${encodeURIComponent(outingType)}&` +
-  `pfp=${encodeURIComponent(pfp)}&` +
-  `name=${encodeURIComponent(name)}&` +
-  `route=${encodeURIComponent(route)}`;
-
+export default function Home({ userRef, outingType, pfp, name, route }: HomeProps) {
+  const [qrCodeImage, setQrCodeImage] = useState(null);
 
   useEffect(() => {
-    // needs outing type
+    const deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&outingType=${outingType}&pfp=${pfp}&name=${name}`;
+    
+    // Generate the QR code
+    generateQRCode(deepLinkURL).then(setQrCodeImage);
+
     // Perform the redirect only in the browser
-    if (typeof window !== "undefined" && window.location.protocol !== "mesh:") {
-      const deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&outingType=${outingType}&pfp=${pfp}&name=${name}`;
+    if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
       window.location.href = deepLinkURL;
     }
-  }, [userRef]);
+  }, [userRef, outingType, pfp, name, route]);
 
   return (
     <>
       <Head>
         <title>Mesh.</title>
         <meta property="og:title" content="Mesh. Four People Together" />
-        <meta
-          property="og:description"
-          content="Connect and collaborate on Mesh."
-        />
-        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:description" content="Connect and collaborate on Mesh." />
+        <meta property="og:image" content="/path/to/your/og-image.png" />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="630" />
         <meta property="og:image:height" content="1200" />
@@ -58,7 +44,11 @@ export default function Home({
         <div className="triangleTag" />
         <h1 className="customFont text-6xl font-bold mb-12 uppercase">Mesh</h1>
         <div className="flex flex-col items-center justify-center mb-12">
-          <Image src={qrCodeImage} alt="QR Code" width={600} className="mb-4" />
+          {qrCodeImage ? (
+            <Image src={qrCodeImage} alt="QR Code" width={600} height={600} className="mb-4" />
+          ) : (
+            <p>Loading QR Code...</p>
+          )}
         </div>
         <p className="text-xl font-light">PLEASE SCAN ON YOUR MOBILE</p>
       </main>
@@ -66,15 +56,13 @@ export default function Home({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const username = (context.query.username as string) || "na";
-  const outingType = (context.query.outingType as string) || "na";
-  const pfp = (context.query.pfp as string) || "na";
-  const name = (context.query.name as string) || "na";
-  const route = (context.query.route as string) || "na";
-  const userRef = (context.query.userRef as string) || "na";
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+  const username = (context.query.username as string) || 'na';
+  const outingType = (context.query.outingType as string) || 'na';
+  const pfp = (context.query.pfp as string) || 'na';
+  const name = (context.query.name as string) || 'na';
+  const route = (context.query.route as string) || 'na';
+  const userRef = (context.query.userRef as string) || 'na';
 
   return {
     props: {
