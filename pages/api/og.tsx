@@ -23,25 +23,23 @@ export default async function handler(req: Request) {
   const route = searchParams.get("route") || "na";
   const encodedURL = searchParams.get("pfp") || "na";
   const imageUrl = fromHexString(encodedURL);
-
+  let topText = ``;
+  let bottomText = ``;
   const outingType = searchParams.get("outingType") || "na";
 
   const fontData = await fetch(
     new URL("../../public/TYPEWR__.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
 
-  let lobbyTime = "tonight";
-
-  if (route == "lobbyTomorrow") {
-    lobbyTime = "tomorrow";
-  }
-
-  let topText = `Join ${name}`;
-  let bottomText = `Join me for ${outingType} on Mesh ${lobbyTime}!`;
+  
 
   if (route == "acceptFriendRequest") {
     topText = "Accept Friend Request";
     bottomText = `${name} is inviting you to join Mesh!`;
+  }
+  else if (route == "invitedConfirm"){
+    topText = "Accept Invite Request";
+    bottomText = `${name}, We are inviting you to coffee this Saturday`
   }
 
   try {
