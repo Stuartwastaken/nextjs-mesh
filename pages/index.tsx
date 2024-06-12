@@ -7,25 +7,25 @@ import { generateQRCode } from '../lib/validations/utils/generateQRCode';
 
 type HomeProps = {
   userRef: string;
-  outingType: string;
+  location: string;
   pfp: string;
   name: string;
   route: string;
 };
 
-export default function Home({ userRef, outingType, pfp, name, route }: HomeProps) {
+export default function Home({ userRef, location, pfp, name, route }: HomeProps) {
   const [qrCodeImage, setQrCodeImage] = useState(null);
   const baseUrl = "https://nextjs-mesh-seven.vercel.app/";
 
   const ogImageUrl = `${baseUrl}/api/og?` +
-  `outingType=${encodeURIComponent(outingType)}&` +
+  `outingType=${encodeURIComponent(location)}&` +
   `pfp=${encodeURIComponent(pfp)}&` +
   `name=${encodeURIComponent(name)}&` +
   `route=${encodeURIComponent(route)}`;
 
   
   useEffect(() => {
-    const deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&outingType=${outingType}&pfp=${pfp}&name=${name}`;
+    const deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&location=${location}&pfp=${pfp}&name=${name}`;
     
     // Generate the QR code
     generateQRCode(deepLinkURL).then(setQrCodeImage);
@@ -34,7 +34,7 @@ export default function Home({ userRef, outingType, pfp, name, route }: HomeProp
     if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
       window.location.href = deepLinkURL;
     }
-  }, [userRef, outingType, pfp, name, route]);
+  }, [userRef, location, pfp, name, route]);
 
   return (
     <>
@@ -66,7 +66,7 @@ export default function Home({ userRef, outingType, pfp, name, route }: HomeProp
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   const username = (context.query.username as string) || 'na';
-  const outingType = (context.query.outingType as string) || 'na';
+  const location = (context.query.location as string) || 'na';
   const pfp = (context.query.pfp as string) || 'na';
   const name = (context.query.name as string) || 'na';
   const route = (context.query.route as string) || 'na';
@@ -75,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
   return {
     props: {
       username,
-      outingType,
+      location,
       pfp,
       name,
       route,
