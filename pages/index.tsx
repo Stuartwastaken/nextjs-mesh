@@ -18,7 +18,7 @@ export default function Home({ userRef, location, pfp, name, route }: HomeProps)
   const baseUrl = "https://nextjs-mesh-seven.vercel.app/";
 
   const ogImageUrl = route === 'invitedConfirm'
-    ? '/mesh_invite.webp'
+    ? '/mesh_invite.png'
     : `${baseUrl}/api/og?` +
       `outingType=${encodeURIComponent(location)}&` +
       `pfp=${encodeURIComponent(pfp)}&` +
