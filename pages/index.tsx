@@ -17,11 +17,13 @@ export default function Home({ userRef, location, pfp, name, route }: HomeProps)
   const [qrCodeImage, setQrCodeImage] = useState(null);
   const baseUrl = "https://nextjs-mesh-seven.vercel.app/";
 
-  const ogImageUrl = `${baseUrl}/api/og?` +
-  `outingType=${encodeURIComponent(location)}&` +
-  `pfp=${encodeURIComponent(pfp)}&` +
-  `name=${encodeURIComponent(name)}&` +
-  `route=${encodeURIComponent(route)}`;
+  const ogImageUrl = route === 'invitedConfirm'
+    ? '/testing_image.webp'
+    : `${baseUrl}/api/og?` +
+      `outingType=${encodeURIComponent(location)}&` +
+      `pfp=${encodeURIComponent(pfp)}&` +
+      `name=${encodeURIComponent(name)}&` +
+      `route=${encodeURIComponent(route)}`;
 
   
   useEffect(() => {
