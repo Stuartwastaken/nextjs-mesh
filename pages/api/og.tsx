@@ -1,19 +1,17 @@
 import { ImageResponse } from "next/og";
+import { inflateSync } from "zlib"; // Built-in Node.js zlib for decompression
 import React from "react";
 
 export const config = {
-  runtime: "edge",
+  runtime: "nodejs", 
+  // If you must remain on "edge" runtime, see note below on alternatives.
 };
 
-// Decodes a hex-encoded string into a normal URL/string
-function fromHexString(hexStr: string) {
-  const hex = hexStr.toString();
-  let str = "";
-  for (let i = 0; i < hex.length; i += 2) {
-    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-  }
-  console.log("Decoded pfp:", str);
-  return str;
+// Decompress a Base64+zlib-deflated string back to the original URL
+function decompressBase64Zlib(compressed: string) {
+  const compressedBuffer = Buffer.from(compressed, "base64");
+  const decompressedBuffer = inflateSync(compressedBuffer);
+  return decompressedBuffer.toString("utf8");
 }
 
 export default async function handler(req: Request) {
@@ -28,22 +26,26 @@ export default async function handler(req: Request) {
   const userRef = searchParams.get("userRef") || "na";
   const referralHash = searchParams.get("referralHash") || "na";
 
-  // Decode the pfp from hex
-  const imageUrl = fromHexString(encodedPfp);
+  // Decompress the pfp from base64+zlib
+  let imageUrl = "";
+  try {
+    imageUrl = decompressBase64Zlib(encodedPfp);
+    console.log("Decompressed pfp URL:", imageUrl);
+  } catch (err) {
+    console.error("Failed to decompress pfp:", err);
+    // Fallback to a default or continue with "na"
+  }
 
   let topText = "";
   let bottomText = "";
 
   if (route === "invitedConfirm") {
-    // Keep your coffee invite logic
     topText = "Accept Invite Request";
     bottomText = `${name}, We are inviting you to coffee this Saturday.`;
   } else if (route === "acceptReferral") {
-    // New referral flow
     topText = "Accept Referral";
     bottomText = `From ${name} — Referral code: ${userRef}, Hash: ${referralHash}`;
   } else {
-    // Some fallback if no route matches
     topText = "Welcome to Mesh";
     bottomText = `${name}`;
   }
@@ -55,15 +57,17 @@ export default async function handler(req: Request) {
 
   try {
     console.log("Attempting to fetch user image at:", imageUrl);
-    const res = await fetch(imageUrl);
-    if (!res.ok) {
+
+    // If imageUrl is empty or "na", fetch might fail. Adjust if you prefer a fallback.
+    const fetchedImg = await fetch(imageUrl);
+    if (!fetchedImg.ok) {
       throw new Error(
-        `Failed to fetch profile image for user ${name}. Status: ${res.status}`
+        `Failed to fetch profile image for user ${name}. Status: ${fetchedImg.status}`
       );
     }
 
     // Convert fetched image to dataUrl so we can blur it in the background
-    const buffer = await res.arrayBuffer();
+    const buffer = await fetchedImg.arrayBuffer();
     const base64 = Buffer.from(buffer).toString("base64");
     const dataUrl = `data:image/png;base64,${base64}`;
 
@@ -147,8 +151,9 @@ export default async function handler(req: Request) {
       }
     );
   } catch (error) {
-    console.error(error);
-    // If something went wrong fetching the user image, show a fallback
+    console.error("Error in OG image generation:", error);
+
+    // If something went wrong (e.g. invalid imageUrl), show a fallback
     return new ImageResponse(
       <>Error: Failed to fetch image for user {name}</>,
       {
