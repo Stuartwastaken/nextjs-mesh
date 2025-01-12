@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/router';
 import { generateQRCode } from '../lib/validations/utils/generateQRCode';
 
 type HomeProps = {
@@ -11,39 +10,79 @@ type HomeProps = {
   pfp: string;
   name: string;
   route: string;
+  referralHash: string;
 };
 
-export default function Home({ userRef, location, pfp, name, route }: HomeProps) {
-  const [qrCodeImage, setQrCodeImage] = useState(null);
-  const baseUrl = "https://nextjs-mesh-seven.vercel.app/";
+export default function Home({
+  userRef,
+  location,
+  pfp,
+  name,
+  route,
+  referralHash
+}: HomeProps) {
+  const [qrCodeImage, setQrCodeImage] = useState<string | null>(null);
 
-  const ogImageUrl = route === 'invitedConfirm'
-    ? '/mesh_invite_two.png'
-    : `${baseUrl}/api/og?` +
-      `outingType=${encodeURIComponent(location)}&` +
-      `pfp=${encodeURIComponent(pfp)}&` +
-      `name=${encodeURIComponent(name)}&` +
-      `route=${encodeURIComponent(route)}`;
+  // Your domain or base path. Adjust if needed:
+  const baseUrl = 'https://nextjs-mesh-seven.vercel.app';
 
-  
+  // Depending on the route, choose either the static or dynamic OG image:
+  const ogImageUrl =
+    route === 'invitedConfirm'
+      ? '/mesh_invite_two.png'
+      : // For acceptReferral, or anything else you might add
+        `${baseUrl}/api/og?` +
+          `pfp=${encodeURIComponent(pfp)}&` +
+          `name=${encodeURIComponent(name)}&` +
+          `userRef=${encodeURIComponent(userRef)}&` +
+          `referralHash=${encodeURIComponent(referralHash)}&` +
+          `route=${encodeURIComponent(route)}&` +
+          // location is optional for referral, but we can still pass it:
+          `outingType=${encodeURIComponent(location)}`;
+
   useEffect(() => {
-    const deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&location=${location}&pfp=${pfp}&name=${name}`;
-    
-    // Generate the QR code
-    generateQRCode(deepLinkURL).then(setQrCodeImage);
+    // Build the deep link that opens your native app
+    let deepLinkURL = '';
 
-    // Perform the redirect only in the browser
+    if (route === 'invitedConfirm') {
+      // Keep your existing coffee-invite logic
+      deepLinkURL =
+        `mesh://meshapp.us/invitedConfirm?` +
+        `userRef=${userRef}&` +
+        `location=${location}&` +
+        `pfp=${pfp}&` +
+        `name=${name}`;
+    } else if (route === 'acceptReferral') {
+      // This is your new referral logic
+      deepLinkURL =
+        `mesh://meshapp.us/acceptReferral?` +
+        `name=${name}&` +
+        `pfp=${pfp}&` +
+        `userRef=${userRef}&` +
+        `referralHash=${referralHash}`;
+    } else {
+      // Fallback if route is something else
+      deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&location=${location}&pfp=${pfp}&name=${name}`;
+    }
+
+    // Generate a QR Code from the deep link
+    generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
+
+    // Redirect to the native link in the browser environment
     if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
       window.location.href = deepLinkURL;
     }
-  }, [userRef, location, pfp, name, route]);
+  }, [userRef, location, pfp, name, route, referralHash]);
 
   return (
     <>
       <Head>
         <title>Mesh.</title>
         <meta property="og:title" content="Mesh. Four People Together" />
-        <meta property="og:description" content="Connect and collaborate on Mesh." />
+        <meta
+          property="og:description"
+          content="Connect and collaborate on Mesh."
+        />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="630" />
@@ -55,7 +94,13 @@ export default function Home({ userRef, location, pfp, name, route }: HomeProps)
         <h1 className="customFont text-6xl font-bold mb-12 uppercase">Mesh</h1>
         <div className="flex flex-col items-center justify-center mb-12">
           {qrCodeImage ? (
-            <Image src={qrCodeImage} alt="QR Code" width={600} height={600} className="mb-4" />
+            <Image
+              src={qrCodeImage}
+              alt="QR Code"
+              width={600}
+              height={600}
+              className="mb-4"
+            />
           ) : (
             <p>Loading QR Code...</p>
           )}
@@ -66,22 +111,25 @@ export default function Home({ userRef, location, pfp, name, route }: HomeProps)
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-  const username = (context.query.username as string) || 'na';
+// Grab everything from query so you can pass them to the page
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const userRef = (context.query.userRef as string) || 'na';
   const location = (context.query.location as string) || 'na';
   const pfp = (context.query.pfp as string) || 'na';
   const name = (context.query.name as string) || 'na';
   const route = (context.query.route as string) || 'na';
-  const userRef = (context.query.userRef as string) || 'na';
+  const referralHash = (context.query.referralHash as string) || 'na';
 
   return {
     props: {
-      username,
+      userRef,
       location,
       pfp,
       name,
       route,
-      userRef,
-    },
+      referralHash
+    }
   };
 };
