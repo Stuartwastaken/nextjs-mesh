@@ -114,7 +114,7 @@ export default async function handler(req: NextRequest) {
     fontData = await fetch(new URL("../../public/TYPEWR__.ttf", import.meta.url)).then(
       (res) => res.arrayBuffer()
     );
-    console.log("[OGP] Font loaded (byteLength):", fontData.byteLength);
+    console.log("[OGP] Font loaded:", fontData);
   } catch (fontError) {
     console.warn("[OGP] Could not load custom font. Continuing without it.", fontError);
   }
