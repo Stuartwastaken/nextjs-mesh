@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
 import pako from "pako";
-import sharp from "sharp";
+import Image from "next/image";
 
 export const config = {
   runtime: "edge",
@@ -162,7 +162,7 @@ export default async function handler(req: NextRequest) {
         }}
       >
         {/* Blurred background image */}
-        <img
+        <Image
           src={dataUrl}
           style={{
             position: "absolute",
@@ -171,8 +171,7 @@ export default async function handler(req: NextRequest) {
             objectFit: "cover",
             filter: "blur(50px)",
             zIndex: 1,
-          }}
-        />
+          }} alt={""}        />
         <div
           style={{
             fontSize: "72px",
@@ -186,7 +185,7 @@ export default async function handler(req: NextRequest) {
         </div>
 
         {/* Center round avatar */}
-        <img
+        <Image
           src={dataUrl}
           style={{
             width: "256px",
@@ -194,8 +193,7 @@ export default async function handler(req: NextRequest) {
             borderRadius: "50%",
             objectFit: "cover",
             zIndex: 3,
-          }}
-        />
+          }} alt={""}        />
 
         <div
           style={{
