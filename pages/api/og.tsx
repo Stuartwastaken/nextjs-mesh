@@ -3,10 +3,11 @@ import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
 import pako from "pako";
+// Note: We can't do real resizing with next/image on the server. 
 import Image from "next/image";
 
 export const config = {
-  runtime: "edge",
+  runtime: "edge", 
 };
 
 /**
@@ -24,6 +25,38 @@ function decompressBase64Zlib(base64String: string): string {
   const url = new TextDecoder().decode(decompressedBytes);
   console.log("decompressBase64Zlib: final URL =", url);
   return url;
+}
+
+/**
+ * Checks if the image is under a certain size limit. 
+ * If it exceeds `maxBytes`, returns a fallback ImageResponse 
+ * to avoid embedding huge images. Otherwise returns `null` meaning "OK".
+ */
+function checkMaxSizeOrFallback(bufferSize: number, name: string, maxBytes: number = 1_000_000) {
+  if (bufferSize > maxBytes) {
+    console.warn(`[OGP] Image is ${bufferSize} bytes, exceeding ${maxBytes}. Returning fallback.`);
+    // Return a simple fallback ImageResponse:
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            display: "flex",
+            fontSize: 20,
+            color: "white",
+            background: "black",
+            width: "600px",
+            height: "400px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Error: Image too large for user {name}
+        </div>
+      ),
+      { width: 600, height: 400 }
+    );
+  }
+  return null; // Means "OK to proceed"
 }
 
 export default async function handler(req: NextRequest) {
@@ -74,14 +107,14 @@ export default async function handler(req: NextRequest) {
   console.log("[OGP] topText:", topText);
   console.log("[OGP] bottomText:", bottomText);
 
-  // Optionally load a custom font
+  // Load a custom font if needed
   let fontData: ArrayBuffer | null = null;
   try {
     console.log("[OGP] Attempting to load TYPEWR__.ttf from public folder");
     fontData = await fetch(new URL("../../public/TYPEWR__.ttf", import.meta.url)).then(
       (res) => res.arrayBuffer()
     );
-    console.log("[OGP] Font loaded. fontData =", fontData);
+    console.log("[OGP] Font loaded (byteLength):", fontData.byteLength);
   } catch (fontError) {
     console.warn("[OGP] Could not load custom font. Continuing without it.", fontError);
   }
@@ -125,6 +158,13 @@ export default async function handler(req: NextRequest) {
     const buffer = await resp.arrayBuffer();
     console.log("[OGP] fetched image length (arrayBuffer) =", buffer.byteLength);
 
+    // 1) Check if it's too large:
+    const fallbackLarge = checkMaxSizeOrFallback(buffer.byteLength, name, 1_000_000);
+    if (fallbackLarge) {
+      // Return a fallback image if it's too big
+      return fallbackLarge;
+    }
+
     const base64 = Buffer.from(buffer).toString("base64");
     console.log("[OGP] base64 length =", base64.length);
 
@@ -155,10 +195,10 @@ export default async function handler(req: NextRequest) {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          width: "690px",
+          width: "620px",
           height: "1155px",
           color: "#FFF",
-          backgroundColor: "gray", // If you want a default background
+          backgroundColor: "gray",
         }}
       >
         {/* Blurred background image */}
@@ -171,7 +211,9 @@ export default async function handler(req: NextRequest) {
             objectFit: "cover",
             filter: "blur(50px)",
             zIndex: 1,
-          }} alt={""}        />
+          }}
+          alt=""
+        />
         <div
           style={{
             fontSize: "72px",
@@ -183,7 +225,6 @@ export default async function handler(req: NextRequest) {
         >
           {topText}
         </div>
-
         {/* Center round avatar */}
         <Image
           src={dataUrl}
@@ -193,7 +234,9 @@ export default async function handler(req: NextRequest) {
             borderRadius: "50%",
             objectFit: "cover",
             zIndex: 3,
-          }} alt={""}        />
+          }}
+          alt=""
+        />
 
         <div
           style={{
@@ -211,7 +254,6 @@ export default async function handler(req: NextRequest) {
     {
       width: 620,
       height: 1155,
-      // If you loaded the font, pass it in:
       fonts: fontData
         ? [
             {
