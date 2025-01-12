@@ -1,3 +1,4 @@
+// pages/api/og.tsx
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
@@ -7,35 +8,54 @@ export const config = {
   runtime: "edge",
 };
 
-// If you used hex before, you'd have a `fromHexString`. But here we'll do pako decompression.
+/**
+ * Decompress a Base64-encoded zlib (deflated) string using pako.
+ * Returns the original uncompressed string (e.g., a URL).
+ */
 function decompressBase64Zlib(base64String: string): string {
+  console.log("decompressBase64Zlib: incoming string length =", base64String.length);
   const compressedBytes = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
+  console.log("decompressBase64Zlib: compressedBytes length =", compressedBytes.length);
+
   const decompressedBytes = pako.inflate(compressedBytes);
-  return new TextDecoder().decode(decompressedBytes);
+  console.log("decompressBase64Zlib: decompressedBytes length =", decompressedBytes.length);
+
+  const url = new TextDecoder().decode(decompressedBytes);
+  console.log("decompressBase64Zlib: final URL =", url);
+  return url;
 }
 
 export default async function handler(req: NextRequest) {
-  // Similar to your older code where we do:
-  //   const url = new URL(req.url);
-  //   const { searchParams } = url;
-  const { searchParams } = new URL(req.url);
+  console.log("----- [OGP] Starting og.tsx handler -----");
+
+  const url = new URL(req.url);
+  const { searchParams } = url;
 
   const name = searchParams.get("name") ?? "na";
   const route = searchParams.get("route") ?? "na";
-  // pfp is your compressed base64, so let's decompress it
   const encodedPfp = searchParams.get("pfp") ?? "na";
+  const userRef = searchParams.get("userRef") ?? "na";
+  const referralHash = searchParams.get("referralHash") ?? "na";
+
+  console.log("[OGP] Query Params ->", {
+    name,
+    route,
+    encodedPfpLength: encodedPfp.length,
+    userRef,
+    referralHash,
+  });
 
   let imageUrl = "";
   try {
     imageUrl = decompressBase64Zlib(encodedPfp);
-    console.log("Decompressed pfp URL:", imageUrl);
   } catch (error) {
-    console.error("Failed to decompress pfp:", error);
-    // Fallback or default to a placeholder
-    imageUrl = "https://via.placeholder.com/600x400/000/fff?text=No+Image";
+    console.error("[OGP] Failed to decompress pfp:", error);
+    imageUrl = "na";
   }
 
-  // Decide what top and bottom text to display
+  console.log("[OGP] route:", route);
+  console.log("[OGP] final decompressed imageUrl:", imageUrl);
+
   let topText = "";
   let bottomText = "";
 
@@ -44,114 +64,165 @@ export default async function handler(req: NextRequest) {
     bottomText = `${name}, We are inviting you to coffee this Saturday`;
   } else if (route === "acceptReferral") {
     topText = "Accept Referral";
-    bottomText = `From ${name}`;
+    bottomText = `From ${name} — Referral code: ${userRef}, Hash: ${referralHash}`;
   } else {
     topText = "Welcome to Mesh";
-    bottomText = name;
+    bottomText = `${name}`;
   }
 
+  console.log("[OGP] topText:", topText);
+  console.log("[OGP] bottomText:", bottomText);
+
   // Optionally load a custom font
-  const fontData = await fetch(
-    new URL("../../public/TYPEWR__.ttf", import.meta.url)
-  ).then((res) => res.arrayBuffer());
-
+  let fontData: ArrayBuffer | null = null;
   try {
-    console.log("Attempting to fetch image URL:", imageUrl);
-    const resp = await fetch(imageUrl);
-    if (!resp.ok) {
-      console.error(`Failed to fetch image. Status: ${resp.status}`);
-      throw new Error(`Failed to fetch image. status = ${resp.status}`);
-    }
+    console.log("[OGP] Attempting to load TYPEWR__.ttf from public folder");
+    fontData = await fetch(new URL("../../public/TYPEWR__.ttf", import.meta.url)).then(
+      (res) => res.arrayBuffer()
+    );
+    console.log("[OGP] Font loaded. fontData.byteLength =", fontData.byteLength);
+  } catch (fontError) {
+    console.warn("[OGP] Could not load custom font. Continuing without it.", fontError);
+  }
 
-    // For the blurred background approach, we can convert to base64 (like before).
-    // However, you can also just do <img src={imageUrl} ...> directly if you prefer.
-    const buffer = await resp.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString("base64");
-    const dataUrl = `data:image/png;base64,${base64}`;
-
+  // If imageUrl is "na" or obviously invalid, skip fetch
+  if (!imageUrl || imageUrl === "na") {
+    console.error("[OGP] Invalid or missing imageUrl. Returning fallback image.");
     return new ImageResponse(
       (
         <div
           style={{
-            position: "relative",
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
+            fontSize: 20,
+            color: "white",
+            background: "black",
+            width: "600px",
+            height: "400px",
             alignItems: "center",
-            width: "690px",
-            height: "1155px",
-            color: "#FFF",
+            justifyContent: "center",
           }}
         >
-          {/* Blurred background image */}
-          <img
-            src={dataUrl}
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              filter: "blur(50px)",
-              zIndex: 1,
-            }}
-          />
-          <div
-            style={{
-              fontSize: "72px",
-              fontWeight: 700,
-              marginBottom: "100px",
-              textAlign: "center",
-              zIndex: 2,
-            }}
-          >
-            {topText}
-          </div>
-
-          {/* Center round avatar */}
-          <img
-            src={dataUrl}
-            style={{
-              width: "256px",
-              height: "256px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              zIndex: 3,
-            }}
-          />
-
-          <div
-            style={{
-              fontSize: "32px",
-              fontWeight: 500,
-              marginTop: 200,
-              textAlign: "center",
-              zIndex: 4,
-            }}
-          >
-            {bottomText}
-          </div>
+          Error: No valid image URL for user {name}
         </div>
       ),
-      {
-        width: 690,
-        height: 1155,
-        fonts: [
-          {
-            name: "Lato",
-            data: fontData,
-            style: "normal",
-            weight: 500,
-          },
-        ],
-      }
+      { width: 600, height: 400 }
     );
-  } catch (error) {
-    console.error("Failed to fetch or render image:", error);
-
-    // Fallback OG image with error text
-    return new ImageResponse(<>{`Error: Failed to fetch or render image for ${name}`}</>, {
-      width: 600,
-      height: 400,
-    });
   }
+
+  let dataUrl = "";
+  try {
+    console.log("[OGP] Attempting to fetch image at:", imageUrl);
+    const resp = await fetch(imageUrl);
+    console.log("[OGP] fetch(imageUrl) -> status:", resp.status);
+
+    if (!resp.ok) {
+      console.error("[OGP] Image fetch not ok. Status:", resp.status, resp.statusText);
+      throw new Error(`Failed to fetch image. status = ${resp.status}`);
+    }
+
+    // Convert the fetched image to base64 for the blurred background
+    const buffer = await resp.arrayBuffer();
+    console.log("[OGP] fetched image length (arrayBuffer) =", buffer.byteLength);
+
+    const base64 = Buffer.from(buffer).toString("base64");
+    console.log("[OGP] base64 length =", base64.length);
+
+    // If the base64 is super short, might be a blank or error
+    if (base64.length < 100) {
+      console.warn("[OGP] Very short base64 string. Possibly an invalid or tiny image.");
+    }
+
+    dataUrl = `data:image/png;base64,${base64}`;
+  } catch (fetchError) {
+    console.error("[OGP] fetchError:", fetchError);
+    // If something fails in fetch, fallback
+    return new ImageResponse(
+      <>Error: Failed to fetch image for user {name}</>,
+      { width: 600, height: 400 }
+    );
+  }
+
+  console.log("[OGP] dataUrl is ready, length =", dataUrl.length);
+  console.log("[OGP] Building final ImageResponse...");
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "690px",
+          height: "1155px",
+          color: "#FFF",
+          backgroundColor: "gray", // If you want a default background
+        }}
+      >
+        {/* Blurred background image */}
+        <img
+          src={dataUrl}
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            filter: "blur(50px)",
+            zIndex: 1,
+          }}
+        />
+        <div
+          style={{
+            fontSize: "72px",
+            fontWeight: 700,
+            marginBottom: "100px",
+            textAlign: "center",
+            zIndex: 2,
+          }}
+        >
+          {topText}
+        </div>
+
+        {/* Center round avatar */}
+        <img
+          src={dataUrl}
+          style={{
+            width: "256px",
+            height: "256px",
+            borderRadius: "50%",
+            objectFit: "cover",
+            zIndex: 3,
+          }}
+        />
+
+        <div
+          style={{
+            fontSize: "32px",
+            fontWeight: 500,
+            marginTop: 200,
+            textAlign: "center",
+            zIndex: 4,
+          }}
+        >
+          {bottomText}
+        </div>
+      </div>
+    ),
+    {
+      width: 690,
+      height: 1155,
+      // If you loaded the font, pass it in:
+      fonts: fontData
+        ? [
+            {
+              name: "Lato",
+              data: fontData,
+              style: "normal",
+              weight: 500,
+            },
+          ]
+        : [],
+    }
+  );
 }
