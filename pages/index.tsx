@@ -30,7 +30,7 @@ export default function Home({
   const ogImageUrl =
     route === 'invitedConfirm'
       ? '/mesh_invite_two.png'
-      : // For acceptReferral, or anything else you might add
+      : // For acceptReferral
         `${baseUrl}/api/og?` +
           `pfp=${encodeURIComponent(pfp)}&` +
           `name=${encodeURIComponent(name)}&` +

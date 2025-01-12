@@ -42,12 +42,6 @@ export default async function handler(
       const pfpString = Array.isArray(pfp) ? pfp[0] : pfp;
       imageUrl = decompressBase64ZlibEdge(pfpString);
       console.log("Decompressed pfp URL:", imageUrl);
-      try {
-        const fetchedImg = await fetch(imageUrl);
-      } catch (err) {
-        console.error("Fetch Error:", err);
-      }
-
     } catch (err) {
       console.error("Failed to decompress pfp:", err);
       imageUrl = "na";
