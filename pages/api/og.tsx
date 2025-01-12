@@ -3,11 +3,10 @@ import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
 import pako from "pako";
-import sharp from "sharp"; // NOTE: Only works on Node.js runtime
+import sharp from "sharp";
 
 export const config = {
-  // If you want to use sharp, you must be on Node.js runtime:
-  runtime: "nodejs",
+  runtime: "edge",
 };
 
 /**
@@ -25,28 +24,6 @@ function decompressBase64Zlib(base64String: string): string {
   const url = new TextDecoder().decode(decompressedBytes);
   console.log("decompressBase64Zlib: final URL =", url);
   return url;
-}
-
-/**
- * Resizes and/or re-encodes an image buffer to ensure it stays under ~1MB.
- * You can tweak the resize width, format, or quality as needed.
- */
-async function shrinkImageIfNeeded(buffer: Buffer): Promise<Buffer> {
-  console.log("[OGP] shrinkImageIfNeeded: original size =", buffer.length, "bytes");
-  // For example, set a width limit of 1000px, and re-encode as JPEG at 70% quality.
-  let output = await sharp(buffer)
-    .resize({ width: 1000, withoutEnlargement: true })
-    .jpeg({ quality: 70 })
-    .toBuffer();
-
-  console.log("[OGP] after first pass =>", output.length, "bytes");
-  const MAX_BYTES = 1_000_000; // 1MB
-  if (output.length > MAX_BYTES) {
-    console.log("[OGP] still >1MB, second pass with lower quality...");
-    output = await sharp(output).jpeg({ quality: 50 }).toBuffer();
-    console.log("[OGP] after second pass =>", output.length, "bytes");
-  }
-  return output;
 }
 
 export default async function handler(req: NextRequest) {
@@ -97,7 +74,17 @@ export default async function handler(req: NextRequest) {
   console.log("[OGP] topText:", topText);
   console.log("[OGP] bottomText:", bottomText);
 
-  // If we had a font, load it; omitted here to focus on the shrink logic.
+  // Optionally load a custom font
+  let fontData: ArrayBuffer | null = null;
+  try {
+    console.log("[OGP] Attempting to load TYPEWR__.ttf from public folder");
+    fontData = await fetch(new URL("../../public/TYPEWR__.ttf", import.meta.url)).then(
+      (res) => res.arrayBuffer()
+    );
+    console.log("[OGP] Font loaded. fontData =", fontData);
+  } catch (fontError) {
+    console.warn("[OGP] Could not load custom font. Continuing without it.", fontError);
+  }
 
   // If imageUrl is "na" or obviously invalid, skip fetch
   if (!imageUrl || imageUrl === "na") {
@@ -134,23 +121,24 @@ export default async function handler(req: NextRequest) {
       throw new Error(`Failed to fetch image. status = ${resp.status}`);
     }
 
-    // Convert the fetched image to a Node Buffer so we can shrink it
-    const originalBuffer = Buffer.from(await resp.arrayBuffer());
-    console.log("[OGP] fetched image length (arrayBuffer) =", originalBuffer.length);
+    // Convert the fetched image to base64 for the blurred background
+    const buffer = await resp.arrayBuffer();
+    console.log("[OGP] fetched image length (arrayBuffer) =", buffer.byteLength);
 
-    // Shrink it if needed
-    const shrunkBuffer = await shrinkImageIfNeeded(originalBuffer);
+    const base64 = Buffer.from(buffer).toString("base64");
+    console.log("[OGP] base64 length =", base64.length);
 
-    // Convert final buffer to base64 for the blurred background
-    const base64 = shrunkBuffer.toString("base64");
-    console.log("[OGP] final base64 length =", base64.length);
+    // If the base64 is super short, might be a blank or error
+    if (base64.length < 100) {
+      console.warn("[OGP] Very short base64 string. Possibly an invalid or tiny image.");
+    }
 
-    dataUrl = `data:image/jpeg;base64,${base64}`;
+    dataUrl = `data:image/png;base64,${base64}`;
   } catch (fetchError) {
     console.error("[OGP] fetchError:", fetchError);
-    // If something fails in fetch or shrink, fallback
+    // If something fails in fetch, fallback
     return new ImageResponse(
-      <>Error: Failed to fetch or shrink image for user {name}</>,
+      <>Error: Failed to fetch image for user {name}</>,
       { width: 600, height: 400 }
     );
   }
@@ -170,7 +158,7 @@ export default async function handler(req: NextRequest) {
           width: "690px",
           height: "1155px",
           color: "#FFF",
-          backgroundColor: "gray",
+          backgroundColor: "gray", // If you want a default background
         }}
       >
         {/* Blurred background image */}
@@ -223,9 +211,19 @@ export default async function handler(req: NextRequest) {
       </div>
     ),
     {
-      width: 690,
+      width: 620,
       height: 1155,
-      // If you loaded the font, pass it in here
+      // If you loaded the font, pass it in:
+      fonts: fontData
+        ? [
+            {
+              name: "Lato",
+              data: fontData,
+              style: "normal",
+              weight: 500,
+            },
+          ]
+        : [],
     }
   );
 }
