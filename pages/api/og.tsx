@@ -32,7 +32,6 @@ export default async function handler(
       name = "na",
       route = "na",
       pfp = "na",
-      outingType = "na",
       userRef = "na",
       referralHash = "na",
     } = req.query;
@@ -48,7 +47,7 @@ export default async function handler(
       } catch (err) {
         console.error("Fetch Error:", err);
       }
-            
+
     } catch (err) {
       console.error("Failed to decompress pfp:", err);
       imageUrl = "na";

@@ -36,7 +36,7 @@ export default function Home({
           `name=${encodeURIComponent(name)}&` +
           `userRef=${encodeURIComponent(userRef)}&` +
           `referralHash=${encodeURIComponent(referralHash)}&` +
-          `route=${encodeURIComponent(route)}&`;
+          `route=${encodeURIComponent(route)}`;
 
   useEffect(() => {
     // Build the deep link that opens your native app
