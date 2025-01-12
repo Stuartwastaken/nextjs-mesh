@@ -12,6 +12,7 @@
     "@vercel/og": "^0.5.20",
     "next": "14.0.0",
     "og": "link:@/vercel/og",
+    "pako": "^2.1.0",
     "qrcode": "^1.5.3",
     "react": "^18",
     "react-dom": "^18",

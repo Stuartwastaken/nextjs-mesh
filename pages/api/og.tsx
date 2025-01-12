@@ -1,20 +1,30 @@
-import { ImageResponse } from "next/og";
-import { inflateSync } from "zlib"; // Built-in Node.js zlib for decompression
 import React from "react";
+import { ImageResponse } from "next/og";
+import pako from "pako";
 
 export const config = {
   runtime: "nodejs", 
-  // If you must remain on "edge" runtime, see note below on alternatives.
+  // If you really want "edge", note that Node built-ins won't work.
+  // pako, however, is fine on the Edge runtime. 
 };
 
-// Decompress a Base64+zlib-deflated string back to the original URL
-function decompressBase64Zlib(compressed: string) {
-  const compressedBuffer = Buffer.from(compressed, "base64");
-  const decompressedBuffer = inflateSync(compressedBuffer);
-  return decompressedBuffer.toString("utf8");
+/**
+ * Decompress a Base64-encoded zlib string using pako.
+ * This works in both Node.js and Edge environments without built-in zlib.
+ */
+function decompressBase64ZlibEdge(base64String: string): string {
+  // Convert base64 to a Uint8Array of compressed bytes.
+  const compressedBytes = Uint8Array.from(atob(base64String), (c) =>
+    c.charCodeAt(0)
+  );
+  // Decompress the bytes with pako.
+  const decompressedBytes = pako.inflate(compressedBytes);
+  // Convert the decompressed bytes back to a UTF-8 string.
+  return new TextDecoder().decode(decompressedBytes);
 }
 
 export default async function handler(req: Request) {
+  // Construct a URL from the incoming request so we can parse query params.
   const url = new URL(req.url);
   const { searchParams } = url;
 
@@ -29,11 +39,11 @@ export default async function handler(req: Request) {
   // Decompress the pfp from base64+zlib
   let imageUrl = "";
   try {
-    imageUrl = decompressBase64Zlib(encodedPfp);
+    imageUrl = decompressBase64ZlibEdge(encodedPfp);
     console.log("Decompressed pfp URL:", imageUrl);
   } catch (err) {
     console.error("Failed to decompress pfp:", err);
-    // Fallback to a default or continue with "na"
+    // Fallback to "na" or some placeholder
   }
 
   let topText = "";
@@ -58,7 +68,11 @@ export default async function handler(req: Request) {
   try {
     console.log("Attempting to fetch user image at:", imageUrl);
 
-    // If imageUrl is empty or "na", fetch might fail. Adjust if you prefer a fallback.
+    if (!imageUrl || imageUrl === "na") {
+      throw new Error("No valid imageUrl to fetch.");
+    }
+
+    // Fetch the image from the decompressed URL
     const fetchedImg = await fetch(imageUrl);
     if (!fetchedImg.ok) {
       throw new Error(
