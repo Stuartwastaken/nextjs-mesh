@@ -1,101 +1,75 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { ImageResponse } from "next/og";
+import { NextRequest } from "next/server";
 import React from "react";
 import pako from "pako";
 
 export const config = {
-  runtime: "nodejs",
+  runtime: "edge",
 };
 
-/**
- * Decompress a Base64-encoded zlib (deflated) string using pako.
- * Returns the original uncompressed string (e.g., a URL).
- */
-function decompressBase64ZlibEdge(base64String: string): string {
-  // Convert base64 to a Uint8Array of compressed bytes.
-  const compressedBytes = Uint8Array.from(atob(base64String), (c) =>
-    c.charCodeAt(0)
-  );
-  // Decompress the bytes with pako.
+// If you used hex before, you'd have a `fromHexString`. But here we'll do pako decompression.
+function decompressBase64Zlib(base64String: string): string {
+  const compressedBytes = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
   const decompressedBytes = pako.inflate(compressedBytes);
-  // Convert the decompressed bytes back to a UTF-8 string.
   return new TextDecoder().decode(decompressedBytes);
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextRequest) {
+  // Similar to your older code where we do:
+  //   const url = new URL(req.url);
+  //   const { searchParams } = url;
+  const { searchParams } = new URL(req.url);
+
+  const name = searchParams.get("name") ?? "na";
+  const route = searchParams.get("route") ?? "na";
+  // pfp is your compressed base64, so let's decompress it
+  const encodedPfp = searchParams.get("pfp") ?? "na";
+
+  let imageUrl = "";
   try {
-    // Grab all query params from req.query
-    const {
-      name = "na",
-      route = "na",
-      pfp = "na",
-      userRef = "na",
-      referralHash = "na",
-    } = req.query;
+    imageUrl = decompressBase64Zlib(encodedPfp);
+    console.log("Decompressed pfp URL:", imageUrl);
+  } catch (error) {
+    console.error("Failed to decompress pfp:", error);
+    // Fallback or default to a placeholder
+    imageUrl = "https://via.placeholder.com/600x400/000/fff?text=No+Image";
+  }
 
-    // Decompress the pfp from base64+zlib
-    let imageUrl = "";
-    try {
-      const pfpString = Array.isArray(pfp) ? pfp[0] : pfp;
-      imageUrl = decompressBase64ZlibEdge(pfpString);
-      console.log("Decompressed pfp URL:", imageUrl);
-    } catch (err) {
-      console.error("Failed to decompress pfp:", err);
-      imageUrl = "na";
+  // Decide what top and bottom text to display
+  let topText = "";
+  let bottomText = "";
+
+  if (route === "invitedConfirm") {
+    topText = "Accept Invite Request";
+    bottomText = `${name}, We are inviting you to coffee this Saturday`;
+  } else if (route === "acceptReferral") {
+    topText = "Accept Referral";
+    bottomText = `From ${name}`;
+  } else {
+    topText = "Welcome to Mesh";
+    bottomText = name;
+  }
+
+  // Optionally load a custom font
+  const fontData = await fetch(
+    new URL("../../public/TYPEWR__.ttf", import.meta.url)
+  ).then((res) => res.arrayBuffer());
+
+  try {
+    console.log("Attempting to fetch image URL:", imageUrl);
+    const resp = await fetch(imageUrl);
+    if (!resp.ok) {
+      console.error(`Failed to fetch image. Status: ${resp.status}`);
+      throw new Error(`Failed to fetch image. status = ${resp.status}`);
     }
 
-    let topText = "";
-    let bottomText = "";
+    // For the blurred background approach, we can convert to base64 (like before).
+    // However, you can also just do <img src={imageUrl} ...> directly if you prefer.
+    const buffer = await resp.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString("base64");
+    const dataUrl = `data:image/png;base64,${base64}`;
 
-    if (route === "invitedConfirm") {
-      topText = "Accept Invite Request";
-      bottomText = `${name}, We are inviting you to coffee this Saturday.`;
-    } else if (route === "acceptReferral") {
-      topText = "Accept Referral";
-      bottomText = `From ${name} — Referral code: ${userRef}, Hash: ${referralHash}`;
-    } else {
-      topText = "Welcome to Mesh";
-      bottomText = `${name}`;
-    }
-
-    // Load a custom font if needed (optional)
-    const fontData = await fetch(
-      new URL("../../public/TYPEWR__.ttf", import.meta.url)
-    ).then((res) => res.arrayBuffer());
-
-    // Fallback if no valid image URL
-    if (!imageUrl || imageUrl === "na") {
-      console.error("No valid imageUrl to fetch.");
-      const fallback = new ImageResponse(
-        <>Error: No valid image URL for user {name}</>,
-        { width: 600, height: 400 }
-      );
-      // Convert fallback to binary
-      if (!fallback.body) {
-        return res.status(500).send("No fallback body returned.");
-      }
-      const fallbackBuffer = await readImageResponseBody(fallback);
-      return sendImageBuffer(res, fallbackBuffer);
-    }
-
-    console.log("Attempting to fetch user image at:", imageUrl);
-    const fetchedImg = await fetch(imageUrl);
-    if (!fetchedImg.ok) {
-      throw new Error(
-        `Failed to fetch profile image for user ${name}. Status: ${fetchedImg.status}`
-      );
-    }
-
-    // Convert fetched image to dataUrl so we can blur it in the background
-    const buffer = await fetchedImg.arrayBuffer();
-    const base64Data = Buffer.from(buffer).toString("base64");
-    const dataUrl = `data:image/png;base64,${base64Data}`;
-
-    // Construct the dynamic OG image
-    const imageResponse = new ImageResponse(
+    return new ImageResponse(
       (
         <div
           style={{
@@ -121,8 +95,6 @@ export default async function handler(
               zIndex: 1,
             }}
           />
-
-          {/* Top text */}
           <div
             style={{
               fontSize: "72px",
@@ -147,7 +119,6 @@ export default async function handler(
             }}
           />
 
-          {/* Bottom text */}
           <div
             style={{
               fontSize: "32px",
@@ -174,47 +145,13 @@ export default async function handler(
         ],
       }
     );
-
-    // Convert ImageResponse to a binary buffer
-    if (!imageResponse.body) {
-      // If somehow there's no body at all
-      return res.status(500).send("ImageResponse body is null or undefined.");
-    }
-    const imageBuffer = await readImageResponseBody(imageResponse);
-
-    // Send it
-    return sendImageBuffer(res, imageBuffer);
   } catch (error) {
-    console.error("Error in OG image generation:", error);
-    return res.status(500).send("Failed to generate OG image");
+    console.error("Failed to fetch or render image:", error);
+
+    // Fallback OG image with error text
+    return new ImageResponse(<>{`Error: Failed to fetch or render image for ${name}`}</>, {
+      width: 600,
+      height: 400,
+    });
   }
-}
-
-/**
- * Reads the chunks from an ImageResponse.body (a ReadableStream) and returns a Buffer.
- */
-async function readImageResponseBody(imageResponse: ImageResponse): Promise<Buffer> {
-  const reader = imageResponse.body!.getReader();
-  const chunks: Buffer[] = [];
-
-  let done = false;
-  while (!done) {
-    const { value, done: readerDone } = await reader.read();
-    if (value) {
-      // 'value' is a Uint8Array, so convert to Node Buffer
-      const nodeBuf = Buffer.from(value);
-      chunks.push(nodeBuf);
-    }
-    done = readerDone;
-  }
-
-  return Buffer.concat(chunks);
-}
-
-/**
- * Helper to send a Buffer as a PNG image response.
- */
-function sendImageBuffer(res: NextApiResponse, buffer: Buffer) {
-  res.setHeader("Content-Type", "image/png");
-  res.status(200).send(buffer);
 }
