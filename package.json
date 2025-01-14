@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@vercel/og": "^0.5.20",
-    "exifreader": "^4.26.0",
     "next": "14.0.0",
     "og": "link:@/vercel/og",
     "qrcode": "^1.5.3",
@@ -26,6 +25,7 @@
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "14.0.0",
+    "exifreader": "^4.26.0",
     "pako": "^2.1.0",
     "postcss": "^8",
     "tailwindcss": "^3",
