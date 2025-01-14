@@ -3,11 +3,11 @@ import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
 import pako from "pako";
-// Note: We can't do real resizing with next/image on the server. 
+// Note: We can't do real resizing with next/image on the server.
 import Image from "next/image";
 
 export const config = {
-  runtime: "edge", 
+  runtime: "edge",
 };
 
 /**
@@ -15,12 +15,23 @@ export const config = {
  * Returns the original uncompressed string (e.g., a URL).
  */
 function decompressBase64Zlib(base64String: string): string {
-  console.log("decompressBase64Zlib: incoming string length =", base64String.length);
-  const compressedBytes = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
-  console.log("decompressBase64Zlib: compressedBytes length =", compressedBytes.length);
+  console.log(
+    "decompressBase64Zlib: incoming string length =",
+    base64String.length
+  );
+  const compressedBytes = Uint8Array.from(atob(base64String), (c) =>
+    c.charCodeAt(0)
+  );
+  console.log(
+    "decompressBase64Zlib: compressedBytes length =",
+    compressedBytes.length
+  );
 
   const decompressedBytes = pako.inflate(compressedBytes);
-  console.log("decompressBase64Zlib: decompressedBytes length =", decompressedBytes.length);
+  console.log(
+    "decompressBase64Zlib: decompressedBytes length =",
+    decompressedBytes.length
+  );
 
   const url = new TextDecoder().decode(decompressedBytes);
   console.log("decompressBase64Zlib: final URL =", url);
@@ -28,13 +39,19 @@ function decompressBase64Zlib(base64String: string): string {
 }
 
 /**
- * Checks if the image is under a certain size limit. 
- * If it exceeds `maxBytes`, returns a fallback ImageResponse 
+ * Checks if the image is under a certain size limit.
+ * If it exceeds `maxBytes`, returns a fallback ImageResponse
  * to avoid embedding huge images. Otherwise returns `null` meaning "OK".
  */
-function checkMaxSizeOrFallback(bufferSize: number, name: string, maxBytes: number = 1_000_000) {
+function checkMaxSizeOrFallback(
+  bufferSize: number,
+  name: string,
+  maxBytes: number = 1_000_000
+) {
   if (bufferSize > maxBytes) {
-    console.warn(`[OGP] Image is ${bufferSize} bytes, exceeding ${maxBytes}. Returning fallback.`);
+    console.warn(
+      `[OGP] Image is ${bufferSize} bytes, exceeding ${maxBytes}. Returning fallback.`
+    );
     // Return a simple fallback ImageResponse:
     return new ImageResponse(
       (
@@ -111,17 +128,22 @@ export default async function handler(req: NextRequest) {
   let fontData: ArrayBuffer | null = null;
   try {
     console.log("[OGP] Attempting to load TYPEWR__.ttf from public folder");
-    fontData = await fetch(new URL("../../public/TYPEWR__.ttf", import.meta.url)).then(
-      (res) => res.arrayBuffer()
-    );
+    fontData = await fetch(
+      new URL("../../public/TYPEWR__.ttf", import.meta.url)
+    ).then((res) => res.arrayBuffer());
     console.log("[OGP] Font loaded:", fontData);
   } catch (fontError) {
-    console.warn("[OGP] Could not load custom font. Continuing without it.", fontError);
+    console.warn(
+      "[OGP] Could not load custom font. Continuing without it.",
+      fontError
+    );
   }
 
   // If imageUrl is "na" or obviously invalid, skip fetch
   if (!imageUrl || imageUrl === "na") {
-    console.error("[OGP] Invalid or missing imageUrl. Returning fallback image.");
+    console.error(
+      "[OGP] Invalid or missing imageUrl. Returning fallback image."
+    );
     return new ImageResponse(
       (
         <div
@@ -150,16 +172,27 @@ export default async function handler(req: NextRequest) {
     console.log("[OGP] fetch(imageUrl) -> status:", resp.status);
 
     if (!resp.ok) {
-      console.error("[OGP] Image fetch not ok. Status:", resp.status, resp.statusText);
+      console.error(
+        "[OGP] Image fetch not ok. Status:",
+        resp.status,
+        resp.statusText
+      );
       throw new Error(`Failed to fetch image. status = ${resp.status}`);
     }
 
     // Convert the fetched image to base64 for the blurred background
     const buffer = await resp.arrayBuffer();
-    console.log("[OGP] fetched image length (arrayBuffer) =", buffer.byteLength);
+    console.log(
+      "[OGP] fetched image length (arrayBuffer) =",
+      buffer.byteLength
+    );
 
     // 1) Check if it's too large:
-    const fallbackLarge = checkMaxSizeOrFallback(buffer.byteLength, name, 1_000_000);
+    const fallbackLarge = checkMaxSizeOrFallback(
+      buffer.byteLength,
+      name,
+      1_000_000
+    );
     if (fallbackLarge) {
       // Return a fallback image if it's too big
       return fallbackLarge;
@@ -170,7 +203,9 @@ export default async function handler(req: NextRequest) {
 
     // If the base64 is super short, might be a blank or error
     if (base64.length < 100) {
-      console.warn("[OGP] Very short base64 string. Possibly an invalid or tiny image.");
+      console.warn(
+        "[OGP] Very short base64 string. Possibly an invalid or tiny image."
+      );
     }
 
     dataUrl = `data:image/png;base64,${base64}`;
@@ -202,8 +237,9 @@ export default async function handler(req: NextRequest) {
         }}
       >
         {/* Blurred background image */}
-        <Image
-          src={dataUrl}
+        <img
+          src={imageUrl}
+          alt=""
           style={{
             position: "absolute",
             width: "100%",
@@ -212,8 +248,8 @@ export default async function handler(req: NextRequest) {
             filter: "blur(50px)",
             zIndex: 1,
           }}
-          alt=""
         />
+
         <div
           style={{
             fontSize: "72px",
@@ -226,8 +262,8 @@ export default async function handler(req: NextRequest) {
           {topText}
         </div>
         {/* Center round avatar */}
-        <Image
-          src={dataUrl}
+        <img
+          src={imageUrl}
           style={{
             width: "256px",
             height: "256px",
