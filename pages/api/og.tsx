@@ -63,10 +63,10 @@ export default async function handler(req: NextRequest) {
     bottomText = `${name}, We are inviting you to coffee this Saturday`;
   } else if (route === "acceptReferral") {
     topText = `VIP Invite from ${name}`;
-    bottomText = `Join me here on Mesh! When you meet your next business partner, best friend, or wife, you can thank me later ;) `;
+    bottomText = `Join me here on Mesh! you can thank me later ;) `;
   } else {
     topText = `VIP Invite from ${name}`;
-    bottomText = `Join me here on Mesh! When you meet your next business partner, best friend, or wife, you can thank me later ;)`;
+    bottomText = `Join me here on Mesh! you can thank me later ;)`;
   }
 
   if (!imageUrl || imageUrl === "na") {
