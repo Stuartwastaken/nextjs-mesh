@@ -2,32 +2,11 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
-import pako from "pako";
 import {getExifOrientation} from "../../lib/validations/utils/getExifOrientation";
+import { decompressBase64Zlib } from "@/lib/validations/utils/decompressBase64Zlib";
+import { orientationToTransform } from "@/lib/validations/utils/orientationToTransform";
 
 
-// 2) Basic orientation -> CSS transform
-function orientationToTransform(orientation: number): string {
-  switch (orientation) {
-    case 3:
-      return "rotate(180deg)";
-    case 6:
-      return "rotate(90deg)";
-    case 8:
-      return "rotate(-90deg)";
-    default:
-      return "none";
-  }
-}
-
-/**
- * Decompress a Base64-encoded zlib (deflated) string using pako.
- */
-function decompressBase64Zlib(base64String: string): string {
-  const compressedBytes = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
-  const decompressedBytes = pako.inflate(compressedBytes);
-  return new TextDecoder().decode(decompressedBytes);
-}
 
 /**
  * Checks size -> fallback
