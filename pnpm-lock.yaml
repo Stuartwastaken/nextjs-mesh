@@ -49,9 +49,6 @@ devDependencies:
   eslint-config-next:
     specifier: 14.0.0
     version: 14.0.0(eslint@8.57.1)(typescript@5.7.3)
-  exifreader:
-    specifier: ^4.26.0
-    version: 4.26.0
   pako:
     specifier: ^2.1.0
     version: 2.1.0
@@ -434,13 +431,6 @@ packages:
       satori: 0.10.9
       yoga-wasm-web: 0.3.3
     dev: false
-
-  /@xmldom/xmldom@0.9.6:
-    resolution: {integrity: sha512-Su4xcxR0CPGwlDHNmVP09fqET9YxbyDXHaSob6JlBH7L6reTYaeim6zbk9o08UarO0L5GTRo3uzl0D+9lSxmvw==}
-    engines: {node: '>=14.6'}
-    requiresBuild: true
-    dev: true
-    optional: true
 
   /acorn-jsx@5.3.2(acorn@8.14.0):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -1400,13 +1390,6 @@ packages:
   /esutils@2.0.3:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
-    dev: true
-
-  /exifreader@4.26.0:
-    resolution: {integrity: sha512-nNN9B0oaXTOpArdnIdJBAro2Sa620m7wMjMA5Xy1rcua0EYHVjzGKM5syBOWDqIG2Qay6Pes/5FOdj65hvZ9Vw==}
-    requiresBuild: true
-    optionalDependencies:
-      '@xmldom/xmldom': 0.9.6
     dev: true
 
   /fast-deep-equal@3.1.3:

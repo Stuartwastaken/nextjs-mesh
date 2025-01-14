@@ -1,35 +1,60 @@
-/* eslint-disable @next/next/no-img-element */
+// pages/api/og.tsx
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
 import pako from "pako";
-// We'll use a plain <img> in the final render
-import ExifReader from "exifreader";
 
-export const config = {
-  runtime: "edge",
-};
+// 1) Our minimal EXIF orientation parser
+function getExifOrientation(arrayBuffer: ArrayBuffer): number {
+  const view = new DataView(arrayBuffer);
+  if (view.getUint16(0, false) !== 0xffd8) {
+    return 1; // not JPEG
+  }
 
-/**
- * Decompress a Base64-encoded zlib (deflated) string using pako.
- * Returns the original uncompressed string (e.g., a URL).
- */
-function decompressBase64Zlib(base64String: string): string {
-  const compressedBytes = Uint8Array.from(atob(base64String), (c) =>
-    c.charCodeAt(0)
-  );
-  const decompressedBytes = pako.inflate(compressedBytes);
-  return new TextDecoder().decode(decompressedBytes);
+  let offset = 2;
+  const length = view.byteLength;
+
+  while (offset < length) {
+    if (view.getUint16(offset, false) === 0xffe1) {
+      const segmentSize = view.getUint16(offset + 2, false);
+      const exifStringOffset = offset + 4;
+
+      const exifString = String.fromCharCode(
+        view.getUint8(exifStringOffset),
+        view.getUint8(exifStringOffset + 1),
+        view.getUint8(exifStringOffset + 2),
+        view.getUint8(exifStringOffset + 3),
+        view.getUint8(exifStringOffset + 4)
+      );
+      if (exifString === "Exif\0") {
+        const tiffOffset = offset + 10;
+        const endian = view.getUint16(tiffOffset, false);
+        const isLittleEndian = endian === 0x4949;
+        const firstIFDOffset = view.getUint32(tiffOffset + 4, isLittleEndian);
+
+        const dirStart = tiffOffset + firstIFDOffset;
+        const entries = view.getUint16(dirStart, isLittleEndian);
+
+        for (let i = 0; i < entries; i++) {
+          const entryOffset = dirStart + 2 + i * 12;
+          const tagId = view.getUint16(entryOffset, isLittleEndian);
+          if (tagId === 0x0112) {
+            return view.getUint16(entryOffset + 8, isLittleEndian);
+          }
+        }
+      }
+      offset += 2 + segmentSize;
+    } else if ((view.getUint16(offset, false) & 0xff00) === 0xff00) {
+      offset += 2 + view.getUint16(offset + 2, false);
+    } else {
+      break;
+    }
+  }
+
+  return 1;
 }
 
-/**
- * Map EXIF orientation to CSS transform.
- * Here are the common orientation values:
- *   1: No rotation
- *   3: 180°
- *   6: 90° clockwise
- *   8: 270° clockwise (or 90° CCW)
- */
+// 2) Basic orientation -> CSS transform
 function orientationToTransform(orientation: number): string {
   switch (orientation) {
     case 3:
@@ -38,54 +63,51 @@ function orientationToTransform(orientation: number): string {
       return "rotate(90deg)";
     case 8:
       return "rotate(-90deg)";
-    // Some phones might use 2, 4, 5, 7 (mirroring/flips),
-    // but often you only see 1,3,6,8 in the wild.
     default:
       return "none";
   }
 }
 
 /**
- * Checks if the image is under a certain size limit.
- * If it exceeds `maxBytes`, returns a fallback ImageResponse
- * to avoid embedding huge images. Otherwise returns `null` meaning "OK".
+ * Decompress a Base64-encoded zlib (deflated) string using pako.
  */
-function checkMaxSizeOrFallback(
-  bufferSize: number,
-  name: string,
-  maxBytes: number = 1_000_000
-) {
+function decompressBase64Zlib(base64String: string): string {
+  const compressedBytes = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
+  const decompressedBytes = pako.inflate(compressedBytes);
+  return new TextDecoder().decode(decompressedBytes);
+}
+
+/**
+ * Checks size -> fallback
+ */
+function checkMaxSizeOrFallback(bufferSize: number, name: string, maxBytes: number = 1_000_000) {
   if (bufferSize > maxBytes) {
-    console.warn(
-      `[OGP] Image is ${bufferSize} bytes, exceeding ${maxBytes}. Returning fallback.`
-    );
-    // Return a simple fallback ImageResponse:
     return new ImageResponse(
-      (
-        <div
-          style={{
-            display: "flex",
-            fontSize: 20,
-            color: "white",
-            background: "black",
-            width: "600px",
-            height: "400px",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          Error: Image too large for user {name}
-        </div>
-      ),
+      <div
+        style={{
+          display: "flex",
+          fontSize: 20,
+          color: "white",
+          background: "black",
+          width: "600px",
+          height: "400px",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Error: Image too large for user {name}
+      </div>,
       { width: 600, height: 400 }
     );
   }
-  return null; // Means "OK to proceed"
+  return null;
 }
 
-export default async function handler(req: NextRequest) {
-  console.log("----- [OGP] Starting og.tsx handler -----");
+export const config = {
+  runtime: "edge",
+};
 
+export default async function handler(req: NextRequest) {
   const url = new URL(req.url);
   const { searchParams } = url;
 
@@ -99,11 +121,10 @@ export default async function handler(req: NextRequest) {
   try {
     imageUrl = decompressBase64Zlib(encodedPfp);
   } catch (error) {
-    console.error("[OGP] Failed to decompress pfp:", error);
     imageUrl = "na";
   }
 
-  // Decide the top/bottom text based on route
+  // Decide the top/bottom text
   let topText = "";
   let bottomText = "";
   if (route === "invitedConfirm") {
@@ -117,86 +138,38 @@ export default async function handler(req: NextRequest) {
     bottomText = `${name}`;
   }
 
-  // If invalid URL, fallback
   if (!imageUrl || imageUrl === "na") {
-    console.error(
-      "[OGP] Invalid or missing imageUrl. Returning fallback image."
-    );
     return new ImageResponse(
-      (
-        <div
-          style={{
-            display: "flex",
-            fontSize: 20,
-            color: "white",
-            background: "black",
-            width: "600px",
-            height: "400px",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          Error: No valid image URL for user {name}
-        </div>
-      ),
+      <div style={{  }}>Error: No valid image URL</div>,
       { width: 600, height: 400 }
     );
   }
 
-  // Fetch the image so we can parse EXIF orientation and check size
-  let orientation = 1; // default
+  // Try fetching the image to parse orientation
+  let orientation = 1;
   try {
     const resp = await fetch(imageUrl);
-    if (!resp.ok) {
-      throw new Error(`Failed to fetch image. status = ${resp.status}`);
-    }
+    if (!resp.ok) throw new Error(`status = ${resp.status}`);
 
     const buffer = await resp.arrayBuffer();
-    // Check for size fallback
-    const fallbackLarge = checkMaxSizeOrFallback(
-      buffer.byteLength,
-      name,
-      1_000_000
-    );
-    if (fallbackLarge) {
-      return fallbackLarge;
-    }
+    const fallbackLarge = checkMaxSizeOrFallback(buffer.byteLength, name, 1_000_000);
+    if (fallbackLarge) return fallbackLarge;
 
-    // 1) parse EXIF orientation
-    const tags = ExifReader.load(buffer);
-    // `Orientation` is often an object with `.value`
-    // Default to 1 (no rotation) unless we successfully parse a number
-    const orientationValue = tags.Orientation?.value;
-    if (typeof orientationValue === "number") {
-      orientation = orientationValue;
-    } else if (typeof orientationValue === "string") {
-      // Attempt to parse if it's a string like "6" or "3"
-      const parsed = parseInt(orientationValue, 10);
-      orientation = Number.isNaN(parsed) ? 1 : parsed;
-    } else {
-      orientation = 1;
-    }
-    console.log("[OGP] EXIF orientation =", orientation);
+    orientation = getExifOrientation(buffer);
   } catch (err) {
-    console.error("[OGP] Could not parse EXIF / fetch image:", err);
-    // We won't fail entirely; we just won't rotate.
-    orientation = 1;
+    orientation = 1; // fallback
   }
 
-  // Convert orientation to a CSS transform
   const transformStyle = orientationToTransform(orientation);
 
-  // (Optional) Load a custom font
+  // Optional custom font
   let fontData: ArrayBuffer | null = null;
   try {
-    fontData = await fetch(
-      new URL("../../public/TYPEWR__.ttf", import.meta.url)
-    ).then((res) => res.arrayBuffer());
-  } catch (fontError) {
-    console.warn(
-      "[OGP] Could not load custom font. Continuing without it.",
-      fontError
+    fontData = await fetch(new URL("../../public/TYPEWR__.ttf", import.meta.url)).then(
+      (res) => res.arrayBuffer()
     );
+  } catch (fontError) {
+    // ignore
   }
 
   return new ImageResponse(
@@ -214,7 +187,7 @@ export default async function handler(req: NextRequest) {
           backgroundColor: "gray",
         }}
       >
-        {/* Blurred background, apply the same rotation so the background is upright */}
+        {/* Blurred background with orientation fix */}
         <img
           src={imageUrl}
           alt=""
@@ -242,7 +215,7 @@ export default async function handler(req: NextRequest) {
           {topText}
         </div>
 
-        {/* Center round avatar, also apply orientation fix */}
+        {/* Center round avatar */}
         <img
           src={imageUrl}
           alt=""
