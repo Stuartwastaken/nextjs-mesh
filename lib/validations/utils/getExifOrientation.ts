@@ -2,7 +2,7 @@
  * A minimal pure-TS EXIF Orientation parser for JPEG files.
  * Returns a number 1..8 (per EXIF spec) or 1 if unknown.
  */
-function getExifOrientation(arrayBuffer: ArrayBuffer): number {
+export function getExifOrientation(arrayBuffer: ArrayBuffer): number {
     const view = new DataView(arrayBuffer);
   
     // Check if it's a JPEG (so we look for 0xFFD8 at start)

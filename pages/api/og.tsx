@@ -3,56 +3,8 @@ import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
 import pako from "pako";
+import {getExifOrientation} from "../../lib/validations/utils/getExifOrientation";
 
-// 1) Our minimal EXIF orientation parser
-function getExifOrientation(arrayBuffer: ArrayBuffer): number {
-  const view = new DataView(arrayBuffer);
-  if (view.getUint16(0, false) !== 0xffd8) {
-    return 1; // not JPEG
-  }
-
-  let offset = 2;
-  const length = view.byteLength;
-
-  while (offset < length) {
-    if (view.getUint16(offset, false) === 0xffe1) {
-      const segmentSize = view.getUint16(offset + 2, false);
-      const exifStringOffset = offset + 4;
-
-      const exifString = String.fromCharCode(
-        view.getUint8(exifStringOffset),
-        view.getUint8(exifStringOffset + 1),
-        view.getUint8(exifStringOffset + 2),
-        view.getUint8(exifStringOffset + 3),
-        view.getUint8(exifStringOffset + 4)
-      );
-      if (exifString === "Exif\0") {
-        const tiffOffset = offset + 10;
-        const endian = view.getUint16(tiffOffset, false);
-        const isLittleEndian = endian === 0x4949;
-        const firstIFDOffset = view.getUint32(tiffOffset + 4, isLittleEndian);
-
-        const dirStart = tiffOffset + firstIFDOffset;
-        const entries = view.getUint16(dirStart, isLittleEndian);
-
-        for (let i = 0; i < entries; i++) {
-          const entryOffset = dirStart + 2 + i * 12;
-          const tagId = view.getUint16(entryOffset, isLittleEndian);
-          if (tagId === 0x0112) {
-            return view.getUint16(entryOffset + 8, isLittleEndian);
-          }
-        }
-      }
-      offset += 2 + segmentSize;
-    } else if ((view.getUint16(offset, false) & 0xff00) === 0xff00) {
-      offset += 2 + view.getUint16(offset + 2, false);
-    } else {
-      break;
-    }
-  }
-
-  return 1;
-}
 
 // 2) Basic orientation -> CSS transform
 function orientationToTransform(orientation: number): string {
