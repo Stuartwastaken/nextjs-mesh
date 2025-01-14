@@ -1,10 +1,10 @@
-// pages/api/og.tsx
+/* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
 import pako from "pako";
-// Note: We can't do real resizing with next/image on the server.
-import Image from "next/image";
+// We'll use a plain <img> in the final render
+import ExifReader from "exifreader";
 
 export const config = {
   runtime: "edge",
@@ -15,27 +15,34 @@ export const config = {
  * Returns the original uncompressed string (e.g., a URL).
  */
 function decompressBase64Zlib(base64String: string): string {
-  console.log(
-    "decompressBase64Zlib: incoming string length =",
-    base64String.length
-  );
   const compressedBytes = Uint8Array.from(atob(base64String), (c) =>
     c.charCodeAt(0)
   );
-  console.log(
-    "decompressBase64Zlib: compressedBytes length =",
-    compressedBytes.length
-  );
-
   const decompressedBytes = pako.inflate(compressedBytes);
-  console.log(
-    "decompressBase64Zlib: decompressedBytes length =",
-    decompressedBytes.length
-  );
+  return new TextDecoder().decode(decompressedBytes);
+}
 
-  const url = new TextDecoder().decode(decompressedBytes);
-  console.log("decompressBase64Zlib: final URL =", url);
-  return url;
+/**
+ * Map EXIF orientation to CSS transform.
+ * Here are the common orientation values:
+ *   1: No rotation
+ *   3: 180°
+ *   6: 90° clockwise
+ *   8: 270° clockwise (or 90° CCW)
+ */
+function orientationToTransform(orientation: number): string {
+  switch (orientation) {
+    case 3:
+      return "rotate(180deg)";
+    case 6:
+      return "rotate(90deg)";
+    case 8:
+      return "rotate(-90deg)";
+    // Some phones might use 2, 4, 5, 7 (mirroring/flips),
+    // but often you only see 1,3,6,8 in the wild.
+    default:
+      return "none";
+  }
 }
 
 /**
@@ -88,14 +95,6 @@ export default async function handler(req: NextRequest) {
   const userRef = searchParams.get("userRef") ?? "na";
   const referralHash = searchParams.get("referralHash") ?? "na";
 
-  console.log("[OGP] Query Params ->", {
-    name,
-    route,
-    encodedPfpLength: encodedPfp.length,
-    userRef,
-    referralHash,
-  });
-
   let imageUrl = "";
   try {
     imageUrl = decompressBase64Zlib(encodedPfp);
@@ -104,12 +103,9 @@ export default async function handler(req: NextRequest) {
     imageUrl = "na";
   }
 
-  console.log("[OGP] route:", route);
-  console.log("[OGP] final decompressed imageUrl:", imageUrl);
-
+  // Decide the top/bottom text based on route
   let topText = "";
   let bottomText = "";
-
   if (route === "invitedConfirm") {
     topText = "Accept Invite Request";
     bottomText = `${name}, We are inviting you to coffee this Saturday`;
@@ -121,25 +117,7 @@ export default async function handler(req: NextRequest) {
     bottomText = `${name}`;
   }
 
-  console.log("[OGP] topText:", topText);
-  console.log("[OGP] bottomText:", bottomText);
-
-  // Load a custom font if needed
-  let fontData: ArrayBuffer | null = null;
-  try {
-    console.log("[OGP] Attempting to load TYPEWR__.ttf from public folder");
-    fontData = await fetch(
-      new URL("../../public/TYPEWR__.ttf", import.meta.url)
-    ).then((res) => res.arrayBuffer());
-    console.log("[OGP] Font loaded:", fontData);
-  } catch (fontError) {
-    console.warn(
-      "[OGP] Could not load custom font. Continuing without it.",
-      fontError
-    );
-  }
-
-  // If imageUrl is "na" or obviously invalid, skip fetch
+  // If invalid URL, fallback
   if (!imageUrl || imageUrl === "na") {
     console.error(
       "[OGP] Invalid or missing imageUrl. Returning fallback image."
@@ -165,61 +143,61 @@ export default async function handler(req: NextRequest) {
     );
   }
 
-  let dataUrl = "";
+  // Fetch the image so we can parse EXIF orientation and check size
+  let orientation = 1; // default
   try {
-    console.log("[OGP] Attempting to fetch image at:", imageUrl);
     const resp = await fetch(imageUrl);
-    console.log("[OGP] fetch(imageUrl) -> status:", resp.status);
-
     if (!resp.ok) {
-      console.error(
-        "[OGP] Image fetch not ok. Status:",
-        resp.status,
-        resp.statusText
-      );
       throw new Error(`Failed to fetch image. status = ${resp.status}`);
     }
 
-    // Convert the fetched image to base64 for the blurred background
     const buffer = await resp.arrayBuffer();
-    console.log(
-      "[OGP] fetched image length (arrayBuffer) =",
-      buffer.byteLength
-    );
-
-    // 1) Check if it's too large:
+    // Check for size fallback
     const fallbackLarge = checkMaxSizeOrFallback(
       buffer.byteLength,
       name,
       1_000_000
     );
     if (fallbackLarge) {
-      // Return a fallback image if it's too big
       return fallbackLarge;
     }
 
-    const base64 = Buffer.from(buffer).toString("base64");
-    console.log("[OGP] base64 length =", base64.length);
-
-    // If the base64 is super short, might be a blank or error
-    if (base64.length < 100) {
-      console.warn(
-        "[OGP] Very short base64 string. Possibly an invalid or tiny image."
-      );
+    // 1) parse EXIF orientation
+    const tags = ExifReader.load(buffer);
+    // `Orientation` is often an object with `.value`
+    // Default to 1 (no rotation) unless we successfully parse a number
+    const orientationValue = tags.Orientation?.value;
+    if (typeof orientationValue === "number") {
+      orientation = orientationValue;
+    } else if (typeof orientationValue === "string") {
+      // Attempt to parse if it's a string like "6" or "3"
+      const parsed = parseInt(orientationValue, 10);
+      orientation = Number.isNaN(parsed) ? 1 : parsed;
+    } else {
+      orientation = 1;
     }
-
-    dataUrl = `data:image/png;base64,${base64}`;
-  } catch (fetchError) {
-    console.error("[OGP] fetchError:", fetchError);
-    // If something fails in fetch, fallback
-    return new ImageResponse(
-      <>Error: Failed to fetch image for user {name}</>,
-      { width: 600, height: 400 }
-    );
+    console.log("[OGP] EXIF orientation =", orientation);
+  } catch (err) {
+    console.error("[OGP] Could not parse EXIF / fetch image:", err);
+    // We won't fail entirely; we just won't rotate.
+    orientation = 1;
   }
 
-  console.log("[OGP] dataUrl is ready, length =", dataUrl.length);
-  console.log("[OGP] Building final ImageResponse...");
+  // Convert orientation to a CSS transform
+  const transformStyle = orientationToTransform(orientation);
+
+  // (Optional) Load a custom font
+  let fontData: ArrayBuffer | null = null;
+  try {
+    fontData = await fetch(
+      new URL("../../public/TYPEWR__.ttf", import.meta.url)
+    ).then((res) => res.arrayBuffer());
+  } catch (fontError) {
+    console.warn(
+      "[OGP] Could not load custom font. Continuing without it.",
+      fontError
+    );
+  }
 
   return new ImageResponse(
     (
@@ -236,7 +214,7 @@ export default async function handler(req: NextRequest) {
           backgroundColor: "gray",
         }}
       >
-        {/* Blurred background image */}
+        {/* Blurred background, apply the same rotation so the background is upright */}
         <img
           src={imageUrl}
           alt=""
@@ -247,6 +225,8 @@ export default async function handler(req: NextRequest) {
             objectFit: "cover",
             filter: "blur(50px)",
             zIndex: 1,
+            transform: transformStyle,
+            transformOrigin: "center center",
           }}
         />
 
@@ -261,17 +241,20 @@ export default async function handler(req: NextRequest) {
         >
           {topText}
         </div>
-        {/* Center round avatar */}
+
+        {/* Center round avatar, also apply orientation fix */}
         <img
           src={imageUrl}
+          alt=""
           style={{
             width: "256px",
             height: "256px",
             borderRadius: "50%",
             objectFit: "cover",
             zIndex: 3,
+            transform: transformStyle,
+            transformOrigin: "center center",
           }}
-          alt=""
         />
 
         <div
