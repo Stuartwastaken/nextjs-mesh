@@ -2,7 +2,7 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
-import {getExifOrientation} from "../../lib/validations/utils/getExifOrientation";
+import { getExifOrientation } from "../../lib/validations/utils/getExifOrientation";
 import { decompressBase64Zlib } from "@/lib/validations/utils/decompressBase64Zlib";
 import { orientationToTransform } from "@/lib/validations/utils/orientationToTransform";
 
@@ -62,8 +62,8 @@ export default async function handler(req: NextRequest) {
     topText = "Accept Invite Request";
     bottomText = `${name}, We are inviting you to coffee this Saturday`;
   } else if (route === "acceptReferral") {
-    topText = "Accept Referral";
-    bottomText = `From ${name} — Referral code: ${userRef}, Hash: ${referralHash}`;
+    topText = "You're invited to Mesh";
+    bottomText = `Connect with ${name} on Mesh`;
   } else {
     topText = "Welcome to Mesh";
     bottomText = `${name}`;
