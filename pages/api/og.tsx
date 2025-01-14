@@ -62,8 +62,8 @@ export default async function handler(req: NextRequest) {
     topText = "Accept Invite Request";
     bottomText = `${name}, We are inviting you to coffee this Saturday`;
   } else if (route === "acceptReferral") {
-    topText = "${name} wants you on Mesh";
-    bottomText = `Connect with ${name} on Mesh`;
+    topText = `VIP Invite from ${name}`;
+    bottomText = `Join me here on Mesh!`;
   } else {
     topText = `VIP Invite from ${name}`;
     bottomText = `Join me here on Mesh!`;
