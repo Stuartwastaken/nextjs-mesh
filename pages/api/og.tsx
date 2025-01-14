@@ -62,11 +62,11 @@ export default async function handler(req: NextRequest) {
     topText = "Accept Invite Request";
     bottomText = `${name}, We are inviting you to coffee this Saturday`;
   } else if (route === "acceptReferral") {
-    topText = "You're invited to Mesh";
+    topText = "${name} wants you on Mesh";
     bottomText = `Connect with ${name} on Mesh`;
   } else {
-    topText = "Welcome to Mesh";
-    bottomText = `${name}`;
+    topText = `VIP Invite from ${name}`;
+    bottomText = `Join me here on Mesh!`;
   }
 
   if (!imageUrl || imageUrl === "na") {
