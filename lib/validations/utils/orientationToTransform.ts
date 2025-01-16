@@ -8,6 +8,6 @@ export function orientationToTransform(orientation: number): string {
     case 8:
       return "rotate(-90deg)";
     default:
-      return "none";
+      return "rotate(0deg)";
   }
 }

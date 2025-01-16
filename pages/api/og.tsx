@@ -11,7 +11,7 @@ import { orientationToTransform } from "@/lib/validations/utils/orientationToTra
 /**
  * Checks size -> fallback
  */
-function checkMaxSizeOrFallback(bufferSize: number, name: string, maxBytes: number = 1_000_000) {
+function checkMaxSizeOrFallback(bufferSize: number, name: string, maxBytes: number = 8_000_000) {
   if (bufferSize > maxBytes) {
     return new ImageResponse(
       <div
@@ -83,7 +83,7 @@ export default async function handler(req: NextRequest) {
     if (!resp.ok) throw new Error(`status = ${resp.status}`);
 
     const buffer = await resp.arrayBuffer();
-    const fallbackLarge = checkMaxSizeOrFallback(buffer.byteLength, name, 1_000_000);
+    const fallbackLarge = checkMaxSizeOrFallback(buffer.byteLength, name, 8_000_000);
     if (fallbackLarge) return fallbackLarge;
 
     orientation = getExifOrientation(buffer);
