@@ -30,45 +30,33 @@ export default function Home({
   const ogImageUrl =
     route === 'invitedConfirm'
       ? '/mesh_invite_two.png'
-      : // For acceptReferral
-        `${baseUrl}/api/og?` +
-          `pfp=${encodeURIComponent(pfp)}&` +
-          `name=${encodeURIComponent(name)}&` +
-          `userRef=${encodeURIComponent(userRef)}&` +
-          `referralHash=${encodeURIComponent(referralHash)}&` +
-          `route=${encodeURIComponent(route)}`;
+      : `${baseUrl}/api/og?` +
+        `pfp=${encodeURIComponent(pfp)}&` +
+        `name=${encodeURIComponent(name)}&` +
+        `userRef=${encodeURIComponent(userRef)}&` +
+        `referralHash=${encodeURIComponent(referralHash)}&` +
+        `route=${encodeURIComponent(route)}`;
 
   useEffect(() => {
-    // Build the deep link that opens your native app
-    let deepLinkURL = '';
+    if (route !== 'acceptReferral') {
+      let deepLinkURL = '';
 
-    if (route === 'invitedConfirm') {
-      // Keep your existing coffee-invite logic
-      deepLinkURL =
-        `mesh://meshapp.us/invitedConfirm?` +
-        `userRef=${userRef}&` +
-        `location=${location}&` +
-        `pfp=${pfp}&` +
-        `name=${name}`;
-    } else if (route === 'acceptReferral') {
-      // This is your new referral logic
-      deepLinkURL =
-        `mesh://meshapp.us/acceptReferral?` +
-        `name=${name}&` +
-        `pfp=${pfp}&` +
-        `userRef=${userRef}&` +
-        `referralHash=${referralHash}`;
-    } else {
-      // Fallback if route is something else
-      deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&location=${location}&pfp=${pfp}&name=${name}`;
-    }
+      if (route === 'invitedConfirm') {
+        deepLinkURL =
+          `mesh://meshapp.us/invitedConfirm?` +
+          `userRef=${userRef}&` +
+          `location=${location}&` +
+          `pfp=${pfp}&` +
+          `name=${name}`;
+      } else {
+        deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&location=${location}&pfp=${pfp}&name=${name}`;
+      }
 
-    // Generate a QR Code from the deep link
-    generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
+      generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
 
-    // Redirect to the native link in the browser environment
-    if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
-      window.location.href = deepLinkURL;
+      if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
+        window.location.href = deepLinkURL;
+      }
     }
   }, [userRef, location, pfp, name, route, referralHash]);
 
@@ -91,7 +79,23 @@ export default function Home({
         <div className="triangleTag" />
         <h1 className="customFont text-6xl font-bold mb-12 uppercase">Mesh</h1>
         <div className="flex flex-col items-center justify-center mb-12">
-          {qrCodeImage ? (
+          {route === 'acceptReferral' ? (
+            <div className="flex flex-col items-center">
+              <Image
+                src="/app_store_logo.png"
+                alt="Download on the App Store"
+                width={200}
+                height={60}
+                className="mb-4"
+              />
+              <Image
+                src="/google_play_logo.png"
+                alt="Get it on Google Play"
+                width={200}
+                height={60}
+              />
+            </div>
+          ) : qrCodeImage ? (
             <Image
               src={qrCodeImage}
               alt="QR Code"
@@ -103,7 +107,9 @@ export default function Home({
             <p>Loading QR Code...</p>
           )}
         </div>
-        <p className="text-xl font-light">PLEASE SCAN ON YOUR MOBILE</p>
+        {route !== 'acceptReferral' && (
+          <p className="text-xl font-light">PLEASE SCAN ON YOUR MOBILE</p>
+        )}
       </main>
     </>
   );
