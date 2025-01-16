@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Head from 'next/head';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { generateQRCode } from '../lib/validations/utils/generateQRCode';
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Head from "next/head";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { generateQRCode } from "../lib/validations/utils/generateQRCode";
 
 type HomeProps = {
   userRef: string;
@@ -19,56 +19,47 @@ export default function Home({
   pfp,
   name,
   route,
-  referralHash
+  referralHash,
 }: HomeProps) {
   const [qrCodeImage, setQrCodeImage] = useState<string | null>(null);
 
   // Your domain or base path. Adjust if needed:
-  const baseUrl = 'https://nextjs-mesh-seven.vercel.app';
+  const baseUrl = "https://nextjs-mesh-seven.vercel.app";
 
   // Depending on the route, choose either the static or dynamic OG image:
   const ogImageUrl =
-    route === 'invitedConfirm'
-      ? '/mesh_invite_two.png'
-      : // For acceptReferral
-        `${baseUrl}/api/og?` +
-          `pfp=${encodeURIComponent(pfp)}&` +
-          `name=${encodeURIComponent(name)}&` +
-          `userRef=${encodeURIComponent(userRef)}&` +
-          `referralHash=${encodeURIComponent(referralHash)}&` +
-          `route=${encodeURIComponent(route)}`;
+    route === "invitedConfirm"
+      ? "/mesh_invite_two.png"
+      : `${baseUrl}/api/og?` +
+        `pfp=${encodeURIComponent(pfp)}&` +
+        `name=${encodeURIComponent(name)}&` +
+        `userRef=${encodeURIComponent(userRef)}&` +
+        `referralHash=${encodeURIComponent(referralHash)}&` +
+        `route=${encodeURIComponent(route)}`;
 
   useEffect(() => {
-    // Build the deep link that opens your native app
-    let deepLinkURL = '';
+    if (route !== "acceptReferral") {
+      let deepLinkURL = "";
 
-    if (route === 'invitedConfirm') {
-      // Keep your existing coffee-invite logic
-      deepLinkURL =
-        `mesh://meshapp.us/invitedConfirm?` +
-        `userRef=${userRef}&` +
-        `location=${location}&` +
-        `pfp=${pfp}&` +
-        `name=${name}`;
-    } else if (route === 'acceptReferral') {
-      // This is your new referral logic
-      deepLinkURL =
-        `mesh://meshapp.us/acceptReferral?` +
-        `name=${name}&` +
-        `pfp=${pfp}&` +
-        `userRef=${userRef}&` +
-        `referralHash=${referralHash}`;
-    } else {
-      // Fallback if route is something else
-      deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&location=${location}&pfp=${pfp}&name=${name}`;
-    }
+      if (route === "invitedConfirm") {
+        deepLinkURL =
+          `mesh://meshapp.us/invitedConfirm?` +
+          `userRef=${userRef}&` +
+          `location=${location}&` +
+          `pfp=${pfp}&` +
+          `name=${name}`;
+      } else {
+        deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&location=${location}&pfp=${pfp}&name=${name}`;
+      }
 
-    // Generate a QR Code from the deep link
-    generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
+      generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
 
-    // Redirect to the native link in the browser environment
-    if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
-      window.location.href = deepLinkURL;
+      if (
+        typeof window !== "undefined" &&
+        window.location.protocol !== "mesh:"
+      ) {
+        window.location.href = deepLinkURL;
+      }
     }
   }, [userRef, location, pfp, name, route, referralHash]);
 
@@ -91,7 +82,35 @@ export default function Home({
         <div className="triangleTag" />
         <h1 className="customFont text-6xl font-bold mb-12 uppercase">Mesh</h1>
         <div className="flex flex-col items-center justify-center mb-12">
-          {qrCodeImage ? (
+          {route === "acceptReferral" ? (
+            <div className="flex flex-col items-center">
+              <a
+                href="https://apps.apple.com/us/app/mesh-four-people-together/id6446823257"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mb-4"
+              >
+                <Image
+                  src="/app_store_logo.png"
+                  alt="Download on the App Store"
+                  width={200}
+                  height={60}
+                />
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.mycompany.mesh&hl=en_US&gl=US&pli=1"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/google_play_logo.png"
+                  alt="Get it on Google Play"
+                  width={200}
+                  height={60}
+                />
+              </a>
+            </div>
+          ) : qrCodeImage ? (
             <Image
               src={qrCodeImage}
               alt="QR Code"
@@ -103,7 +122,9 @@ export default function Home({
             <p>Loading QR Code...</p>
           )}
         </div>
-        <p className="text-xl font-light">PLEASE SCAN ON YOUR MOBILE</p>
+        {route !== "acceptReferral" && (
+          <p className="text-xl font-light">PLEASE SCAN ON YOUR MOBILE</p>
+        )}
       </main>
     </>
   );
@@ -113,12 +134,12 @@ export default function Home({
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const userRef = (context.query.userRef as string) || 'na';
-  const location = (context.query.location as string) || 'na';
-  const pfp = (context.query.pfp as string) || 'na';
-  const name = (context.query.name as string) || 'na';
-  const route = (context.query.route as string) || 'na';
-  const referralHash = (context.query.referralHash as string) || 'na';
+  const userRef = (context.query.userRef as string) || "na";
+  const location = (context.query.location as string) || "na";
+  const pfp = (context.query.pfp as string) || "na";
+  const name = (context.query.name as string) || "na";
+  const route = (context.query.route as string) || "na";
+  const referralHash = (context.query.referralHash as string) || "na";
 
   return {
     props: {
@@ -127,7 +148,7 @@ export const getServerSideProps: GetServerSideProps = async (
       pfp,
       name,
       route,
-      referralHash
-    }
+      referralHash,
+    },
   };
 };
