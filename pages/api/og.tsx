@@ -11,28 +11,28 @@ import { orientationToTransform } from "@/lib/validations/utils/orientationToTra
 /**
  * Checks size -> fallback
  */
-function checkMaxSizeOrFallback(bufferSize: number, name: string, maxBytes: number = 1_000_000) {
-  if (bufferSize > maxBytes) {
-    return new ImageResponse(
-      <div
-        style={{
-          display: "flex",
-          fontSize: 20,
-          color: "white",
-          background: "black",
-          width: "600px",
-          height: "400px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        Error: Image too large for user {name}
-      </div>,
-      { width: 600, height: 400 }
-    );
-  }
-  return null;
-}
+// function checkMaxSizeOrFallback(bufferSize: number, name: string, maxBytes: number = 1_000_000) {
+//   if (bufferSize > maxBytes) {
+//     return new ImageResponse(
+//       <div
+//         style={{
+//           display: "flex",
+//           fontSize: 20,
+//           color: "white",
+//           background: "black",
+//           width: "600px",
+//           height: "400px",
+//           alignItems: "center",
+//           justifyContent: "center",
+//         }}
+//       >
+//         Error: Image too large for user {name}
+//       </div>,
+//       { width: 600, height: 400 }
+//     );
+//   }
+//   return null;
+// }
 
 export const config = {
   runtime: "edge",
@@ -83,8 +83,8 @@ export default async function handler(req: NextRequest) {
     if (!resp.ok) throw new Error(`status = ${resp.status}`);
 
     const buffer = await resp.arrayBuffer();
-    const fallbackLarge = checkMaxSizeOrFallback(buffer.byteLength, name, 1_000_000);
-    if (fallbackLarge) return fallbackLarge;
+    // const fallbackLarge = checkMaxSizeOrFallback(buffer.byteLength, name, 1_000_000);
+    // if (fallbackLarge) return fallbackLarge;
 
     orientation = getExifOrientation(buffer);
   } catch (err) {
