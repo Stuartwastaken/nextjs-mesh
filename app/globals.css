@@ -38,10 +38,10 @@ body {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 240px 100%, 0 calc(100% - 240px));
   display: flex;
   align-items: center;
-  margin-left: 200;
   justify-content: flex-end;
   z-index: 5;
-  padding: 0 3vw; /* Add horizontal padding */
+  padding: 0 3vw; /* horizontal padding if needed */
+  /* Removed invalid margin-left property */
 }
 
 /* Style the text within the .triangleTag */
@@ -54,15 +54,14 @@ body {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   z-index: 10;
-  position: inherit;
-  /* rotate the text 45 degrees */
+  
+  /* Use absolute positioning for precise control */
+  position: absolute;
   transform: rotate(45deg);
-  /* move the tag text to be up about 50% from the bottom of the tag */
-  /* this is a bit of a hack, but it works */
-  margin-top: -10%;
-  /* move the tag text to be up about 50% from the right of the tag */
-  /* this is a bit of a hack, but it works */
-  margin-right: -20%;
+  
+  /* Adjust these values to position the text inside the triangle */
+  top: 55%;       /* vertical placement */
+  right: -5%;     /* horizontal placement */
 }
 
 
