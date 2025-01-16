@@ -38,28 +38,39 @@ export default function Home({
         `route=${encodeURIComponent(route)}`;
 
   useEffect(() => {
+    let deepLinkURL = "";
+
+    if (route === "invitedConfirm") {
+      deepLinkURL =
+        `mesh://meshapp.us/invitedConfirm?` +
+        `userRef=${userRef}&` +
+        `location=${location}&` +
+        `pfp=${pfp}&` +
+        `name=${name}`;
+    } else if (route === "acceptReferral") {
+      deepLinkURL =
+        `mesh://meshapp.us/acceptReferral?` +
+        `name=${name}&` +
+        `pfp=${pfp}&` +
+        `userRef=${userRef}&` +
+        `referralHash=${referralHash}`;
+    } else {
+      deepLinkURL = 
+        `mesh://meshapp.us/${route}?` +
+        `userRef=${userRef}&` +
+        `location=${location}&` +
+        `pfp=${pfp}&` +
+        `name=${name}`;
+    }
+
+    // Generate QR code only if not acceptReferral
     if (route !== "acceptReferral") {
-      let deepLinkURL = "";
-
-      if (route === "invitedConfirm") {
-        deepLinkURL =
-          `mesh://meshapp.us/invitedConfirm?` +
-          `userRef=${userRef}&` +
-          `location=${location}&` +
-          `pfp=${pfp}&` +
-          `name=${name}`;
-      } else {
-        deepLinkURL = `mesh://meshapp.us/${route}?userRef=${userRef}&location=${location}&pfp=${pfp}&name=${name}`;
-      }
-
       generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
+    }
 
-      if (
-        typeof window !== "undefined" &&
-        window.location.protocol !== "mesh:"
-      ) {
-        window.location.href = deepLinkURL;
-      }
+    // Redirect to the native link in the browser environment
+    if (typeof window !== "undefined" && window.location.protocol !== "mesh:") {
+      window.location.href = deepLinkURL;
     }
   }, [userRef, location, pfp, name, route, referralHash]);
 
