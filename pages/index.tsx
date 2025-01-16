@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Head from 'next/head';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { generateQRCode } from '../lib/validations/utils/generateQRCode';
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Head from "next/head";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { generateQRCode } from "../lib/validations/utils/generateQRCode";
 
 type HomeProps = {
   userRef: string;
@@ -19,17 +19,17 @@ export default function Home({
   pfp,
   name,
   route,
-  referralHash
+  referralHash,
 }: HomeProps) {
   const [qrCodeImage, setQrCodeImage] = useState<string | null>(null);
 
   // Your domain or base path. Adjust if needed:
-  const baseUrl = 'https://nextjs-mesh-seven.vercel.app';
+  const baseUrl = "https://nextjs-mesh-seven.vercel.app";
 
   // Depending on the route, choose either the static or dynamic OG image:
   const ogImageUrl =
-    route === 'invitedConfirm'
-      ? '/mesh_invite_two.png'
+    route === "invitedConfirm"
+      ? "/mesh_invite_two.png"
       : `${baseUrl}/api/og?` +
         `pfp=${encodeURIComponent(pfp)}&` +
         `name=${encodeURIComponent(name)}&` +
@@ -38,10 +38,10 @@ export default function Home({
         `route=${encodeURIComponent(route)}`;
 
   useEffect(() => {
-    if (route !== 'acceptReferral') {
-      let deepLinkURL = '';
+    if (route !== "acceptReferral") {
+      let deepLinkURL = "";
 
-      if (route === 'invitedConfirm') {
+      if (route === "invitedConfirm") {
         deepLinkURL =
           `mesh://meshapp.us/invitedConfirm?` +
           `userRef=${userRef}&` +
@@ -54,7 +54,10 @@ export default function Home({
 
       generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
 
-      if (typeof window !== 'undefined' && window.location.protocol !== 'mesh:') {
+      if (
+        typeof window !== "undefined" &&
+        window.location.protocol !== "mesh:"
+      ) {
         window.location.href = deepLinkURL;
       }
     }
@@ -79,21 +82,33 @@ export default function Home({
         <div className="triangleTag" />
         <h1 className="customFont text-6xl font-bold mb-12 uppercase">Mesh</h1>
         <div className="flex flex-col items-center justify-center mb-12">
-          {route === 'acceptReferral' ? (
+          {route === "acceptReferral" ? (
             <div className="flex flex-col items-center">
-              <Image
-                src="/app_store_logo.png"
-                alt="Download on the App Store"
-                width={200}
-                height={60}
+              <a
+                href="https://apps.apple.com/us/app/mesh-four-people-together/id6446823257"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mb-4"
-              />
-              <Image
-                src="/google_play_logo.png"
-                alt="Get it on Google Play"
-                width={200}
-                height={60}
-              />
+              >
+                <Image
+                  src="/app_store_logo.png"
+                  alt="Download on the App Store"
+                  width={200}
+                  height={60}
+                />
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.mycompany.mesh&hl=en_US&gl=US&pli=1"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/google_play_logo.png"
+                  alt="Get it on Google Play"
+                  width={200}
+                  height={60}
+                />
+              </a>
             </div>
           ) : qrCodeImage ? (
             <Image
@@ -107,7 +122,7 @@ export default function Home({
             <p>Loading QR Code...</p>
           )}
         </div>
-        {route !== 'acceptReferral' && (
+        {route !== "acceptReferral" && (
           <p className="text-xl font-light">PLEASE SCAN ON YOUR MOBILE</p>
         )}
       </main>
@@ -119,12 +134,12 @@ export default function Home({
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const userRef = (context.query.userRef as string) || 'na';
-  const location = (context.query.location as string) || 'na';
-  const pfp = (context.query.pfp as string) || 'na';
-  const name = (context.query.name as string) || 'na';
-  const route = (context.query.route as string) || 'na';
-  const referralHash = (context.query.referralHash as string) || 'na';
+  const userRef = (context.query.userRef as string) || "na";
+  const location = (context.query.location as string) || "na";
+  const pfp = (context.query.pfp as string) || "na";
+  const name = (context.query.name as string) || "na";
+  const route = (context.query.route as string) || "na";
+  const referralHash = (context.query.referralHash as string) || "na";
 
   return {
     props: {
@@ -133,7 +148,7 @@ export const getServerSideProps: GetServerSideProps = async (
       pfp,
       name,
       route,
-      referralHash
-    }
+      referralHash,
+    },
   };
 };
