@@ -59,8 +59,8 @@ body {
   position: absolute;
   transform: rotate(45deg);
   
-  /* Adjust these values to position the text inside the triangle */
-  top: 55%;       /* vertical placement */
+
+  top: 40%;       /* vertical placement */
   right: -5%;     /* horizontal placement */
 }
 
