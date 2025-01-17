@@ -3,6 +3,7 @@ import Image from "next/image";
 import Head from "next/head";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { generateQRCode } from "../lib/validations/utils/generateQRCode";
+import { decompressBase64Zlib } from "@/lib/validations/utils/decompressBase64Zlib";
 
 type HomeProps = {
   userRef: string;
@@ -51,7 +52,7 @@ export default function Home({
       deepLinkURL =
         `mesh://meshapp.us/acceptReferral?` +
         `name=${name}&` +
-        `pfp=${pfp}&` +
+        `pfp=${decompressBase64Zlib(pfp)}&` +
         `userRef=${userRef}&` +
         `referralHash=${referralHash}`;
     } else {
