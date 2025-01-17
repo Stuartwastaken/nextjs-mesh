@@ -52,7 +52,6 @@ export default function Home({
       deepLinkURL =
         `mesh://meshapp.us/acceptReferral?` +
         `name=${name}&` +
-        `pfp=${decompressBase64Zlib(pfp)}&` +
         `userRef=${userRef}&` +
         `referralHash=${referralHash}`;
     } else {
