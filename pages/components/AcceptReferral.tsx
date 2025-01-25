@@ -2,19 +2,13 @@ import React from "react";
 import Image from "next/image";
 import styles from "./AcceptReferral.module.css";
 
-/**
- * Optional: If you want to use a modern Google font through next/font:
- */
-// import { Poppins } from 'next/font/google';
-// const poppins = Poppins({ weight: ["400", "600"], subsets: ["latin"] });
+
+import { Poppins } from 'next/font/google';
+const poppins = Poppins({ weight: ["400", "600"], subsets: ["latin"] });
 
 export default function AcceptReferral() {
   return (
-    /**
-     * If using a Next.js Google font import above, wrap your container like:
-     * <div className={`${styles.container} ${poppins.className}`}>
-     */
-    <div className={styles.container}>
+    <div className={`${styles.container} ${poppins.className}`}>
       <h2 className={styles.heading}>How it works</h2>
 
       <div className={styles.steps}>
