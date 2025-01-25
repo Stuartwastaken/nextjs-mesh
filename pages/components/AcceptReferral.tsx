@@ -2,11 +2,34 @@ import React from "react";
 import Image from "next/image";
 import styles from "./AcceptReferral.module.css";
 
-
-import { Poppins } from 'next/font/google';
+// Pull in the Google Font the same way as before:
+import { Poppins } from "next/font/google";
 const poppins = Poppins({ weight: ["400", "600"], subsets: ["latin"] });
 
-export default function AcceptReferral() {
+// Define the props we need for the referral deep link:
+type AcceptReferralProps = {
+  name: string;
+  userRef: string;
+  referralHash: string;
+};
+
+export default function AcceptReferral({
+  name,
+  userRef,
+  referralHash,
+}: AcceptReferralProps) {
+  // This button explicitly triggers the deep link:
+  const handleClaimRewards = () => {
+    const deepLinkURL =
+      `mesh://meshapp.us/acceptReferral?` +
+      `name=${name}&` +
+      `userRef=${userRef}&` +
+      `referralHash=${referralHash}`;
+
+    // On click, attempt to open the app via deep link:
+    window.location.href = deepLinkURL;
+  };
+
   return (
     <div className={`${styles.container} ${poppins.className}`}>
       <h2 className={styles.heading}>How do referrals work?</h2>
@@ -65,7 +88,10 @@ export default function AcceptReferral() {
         <div className={styles.step}>
           <div className={styles.stepNumber}>3</div>
           <div className={styles.stepContent}>
-            <p>Click the referral link again to redeem rewards!</p>
+            {/* The button that triggers the deep link */}
+            <button className={styles.claimButton} onClick={handleClaimRewards}>
+              Claim Rewards
+            </button>
           </div>
         </div>
       </div>

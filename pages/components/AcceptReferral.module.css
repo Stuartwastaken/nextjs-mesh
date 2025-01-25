@@ -32,7 +32,7 @@
   /* Single step layout */
   .step {
     display: flex;
-    align-items: flex-start;
+    align-items: center; /* Vertically center step number and content */
     margin: 1.5rem 0;
     position: relative;
     padding: 1rem;
@@ -59,11 +59,19 @@
     justify-content: center;
     margin-right: 1rem;
     flex-shrink: 0;
+    flex-grow: 0;
   }
   
   /* Step text content */
+  .stepContent {
+    flex: 1;
+    margin-left: 1rem;
+    text-align: center; /* Center text horizontally */
+  }
+  
   .stepContent p {
     margin: 0.5rem 0;
+    /* Remove margin-left to center text */
   }
   
   /* Store links row */
@@ -72,6 +80,7 @@
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 0.75rem;
+    justify-content: center; /* Center store links horizontally */
   }
   
   /* Image wrapper to crop and hide edges */
@@ -85,7 +94,7 @@
     transition: border-color 0.3s ease, transform 0.3s ease;
   }
   
-  /* Zoom on hover to further hide any edges. */
+  /* Zoom on hover */
   .imgWrapper:hover {
     border-color: #ff00f0;
     transform: scale(1.02);
@@ -100,10 +109,13 @@
   }
   
   /* Larger screens: keep steps side by side if desired */
-  /* In this example, we still show them stacked for clarity */
   @media (min-width: 768px) {
     .step {
       flex-direction: row;
+    }
+  
+    .stepContent {
+      text-align: left; /* Align text to the left on larger screens */
     }
   }
   
@@ -126,5 +138,53 @@
     .storeLinks {
       justify-content: center;
     }
+  }
+  
+  /* ============================================= */
+  /* NEW: Claim Rewards button styles and animation */
+  /* ============================================= */
+  
+  @keyframes pulseReward {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
+    }
+    50% {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(255, 0, 240, 0.3);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
+    }
+  }
+  
+  .claimButton {
+    background: linear-gradient(135deg, #ff00f0 0%, #00ffd5 100%);
+    color: #000;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: pulseReward 2.5s infinite ease-in-out;
+  }
+  
+  .claimButton:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 15px rgba(255, 0, 240, 0.2);
+  }
+  
+  .claimButton:active {
+    transform: translateY(0) scale(1);
+    box-shadow: none;
+  }
+  
+  /* Optional: Add focus styles for accessibility */
+  .claimButton:focus {
+    outline: 2px solid #00ffd5;
+    outline-offset: 2px;
   }
   

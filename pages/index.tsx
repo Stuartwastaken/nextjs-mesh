@@ -6,6 +6,9 @@ import { generateQRCode } from "../lib/validations/utils/generateQRCode";
 import { decompressBase64Zlib } from "@/lib/validations/utils/decompressBase64Zlib";
 import AcceptReferral from "./components/AcceptReferral";
 
+import { Poppins } from "next/font/google";
+const poppins = Poppins({ weight: ["400", "600"], subsets: ["latin"] });
+
 type HomeProps = {
   userRef: string;
   location: string;
@@ -56,7 +59,7 @@ export default function Home({
         `userRef=${userRef}&` +
         `referralHash=${referralHash}`;
     } else {
-      deepLinkURL = 
+      deepLinkURL =
         `mesh://meshapp.us/${route}?` +
         `userRef=${userRef}&` +
         `location=${location}&` +
@@ -64,15 +67,17 @@ export default function Home({
         `name=${name}`;
     }
 
-    // Generate QR code only if not acceptReferral
+    // Generate QR code only if NOT acceptReferral:
     if (route !== "acceptReferral") {
       generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
-    }
 
-    // Redirect to the native link in the browser environment
-    if (typeof window !== "undefined" && window.location.protocol !== "mesh:") {
-      window.location.href = deepLinkURL;
+      // For all routes EXCEPT acceptReferral, auto-redirect to the deep link:
+      if (typeof window !== "undefined" && window.location.protocol !== "mesh:") {
+        window.location.href = deepLinkURL;
+      }
     }
+    // When route === "acceptReferral", we do NOT auto-redirect
+    // (we just show the instructions and the Claim Rewards button)
   }, [userRef, location, pfp, name, route, referralHash]);
 
   return (
@@ -92,11 +97,22 @@ export default function Home({
       </Head>
       <main className="bg-black min-h-screen text-white flex flex-col items-center justify-center px-8 p-48">
         <div className="triangleTag" />
-        <h1 className="customFont text-6xl font-bold mb-12 uppercase">Mesh</h1>
+        <h1
+          className={`${poppins.className} text-6xl font-bold mb-12 uppercase`}
+        >
+          Mesh
+        </h1>
+
         <div className="flex flex-col items-center justify-center mb-12">
           {route === "acceptReferral" ? (
-           AcceptReferral()
+            // Show the AcceptReferral component with the needed props:
+            <AcceptReferral
+              name={name}
+              userRef={userRef}
+              referralHash={referralHash}
+            />
           ) : qrCodeImage ? (
+            // For other routes, show the generated QR code:
             <Image
               src={qrCodeImage}
               alt="QR Code"
@@ -108,6 +124,7 @@ export default function Home({
             <p>Loading QR Code...</p>
           )}
         </div>
+        {/* For any route that's NOT acceptReferral, show "PLEASE SCAN" */}
         {route !== "acceptReferral" && (
           <p className="text-xl font-light">PLEASE SCAN ON YOUR MOBILE</p>
         )}

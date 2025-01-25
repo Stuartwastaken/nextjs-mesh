@@ -4,30 +4,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
 :root {
+  /* Light Mode Variables */
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-  --early-access-bg: #c8f3ff; 
+  --background-gradient: linear-gradient(135deg, #ff00f0, #00ffd5);
+  --early-access-bg: linear-gradient(135deg, #ff00f0, #00ffd5);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    /* Dark Mode Variables */
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-gradient: #000; /* Pure black in dark mode */
+    --early-access-bg: linear-gradient(135deg, #ff00f0, #00ffd5); /* Maintain gradient */
   }
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: var(--background-gradient);
+  transition: background 0.5s ease, color 0.5s ease;
 }
-/* Rectangle banner style */
+
+/* Rectangle banner style with gradient */
 .triangleTag {
   position: absolute;
   top: 0;
@@ -40,33 +38,34 @@ body {
   align-items: center;
   justify-content: flex-end;
   z-index: 5;
-  padding: 0 3vw; /* horizontal padding if needed */
-  /* Removed invalid margin-left property */
+  padding: 0 3vw; /* Horizontal padding if needed */
+  transition: background 0.5s ease;
 }
 
 /* Style the text within the .triangleTag */
 .triangleTag::after {
   content: 'Early Access';
   font-family: 'Poppins', sans-serif;
-  color: black;
+  /* Apply gradient to text */
+  background: var(--background-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   z-index: 10;
-  
-  /* Use absolute positioning for precise control */
+
+  /* Absolute positioning for precise control */
   position: absolute;
   transform: rotate(45deg);
-  
 
-  top: 40%;       /* vertical placement */
-  right: -5%;     /* horizontal placement */
+  top: 40%;       /* Vertical placement */
+  right: -5%;     /* Horizontal placement */
+  transition: background 0.5s ease;
 }
 
-
-
-/* Custom font style */
+/* Custom font style (if needed elsewhere) */
 .customFont {
-  font-family: sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
