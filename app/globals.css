@@ -48,6 +48,7 @@ body {
   font-family: 'Poppins', sans-serif;
   /* Apply gradient to text */
   background: var(--background-gradient);
+  color: black;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 1.6rem;
