@@ -9,7 +9,7 @@ const poppins = Poppins({ weight: ["400", "600"], subsets: ["latin"] });
 export default function AcceptReferral() {
   return (
     <div className={`${styles.container} ${poppins.className}`}>
-      <h2 className={styles.heading}>How it works</h2>
+      <h2 className={styles.heading}>How do referrals work?</h2>
 
       <div className={styles.steps}>
         {/* Step 1 */}
