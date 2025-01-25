@@ -1,36 +1,57 @@
+/* Base container, black background, centered content */
 .container {
+    background-color: #000;
+    color: #fff;
+    min-height: 100vh;
+    padding: 2rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
-    max-width: 800px;
-    margin: 0 auto;
+    justify-content: flex-start;
   }
   
+  /* Heading with a slight neon-like gradient */
   .heading {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    background: linear-gradient(90deg, #ff00f0, #00ffd5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     text-align: center;
   }
   
+  /* Steps container */
   .steps {
     display: flex;
     flex-direction: column;
     width: 100%;
+    max-width: 800px;
   }
   
-  /* Single step container */
+  /* Single step layout */
   .step {
     display: flex;
     align-items: flex-start;
-    margin: 1rem 0;
+    margin: 1.5rem 0;
+    position: relative;
+    padding: 1rem;
+    border: 1px solid #222;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
   }
   
+  /* Slight hover elevation for a modern feel */
+  .step:hover {
+    transform: translateY(-3px);
+  }
+  
+  /* Step number with a glowing background */
   .stepNumber {
-    min-width: 40px;
-    min-height: 40px;
-    background-color: #0070f3;
-    color: #fff;
+    min-width: 48px;
+    min-height: 48px;
+    background: linear-gradient(135deg, #ff00f0 0%, #00ffd5 100%);
+    color: #000;
     font-weight: bold;
     border-radius: 50%;
     display: flex;
@@ -40,39 +61,58 @@
     flex-shrink: 0;
   }
   
-  .stepContent {
-    flex: 1;
+  /* Step text content */
+  .stepContent p {
+    margin: 0.5rem 0;
   }
   
+  /* Store links row */
   .storeLinks {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
   }
   
-  /* Wrapper for store logos to add border and hide edges */
+  /* Image wrapper to crop and hide edges */
   .imgWrapper {
     position: relative;
     width: 200px;
     height: 60px;
-    border: 2px solid #000; /* black border */
+    border: 2px solid #444; /* Dark border for subtle accent */
+    border-radius: 4px;
     overflow: hidden;
+    transition: border-color 0.3s ease, transform 0.3s ease;
   }
   
-  /* Slightly scale the image so any white edges are hidden */
+  /* Zoom on hover to further hide any edges. */
+  .imgWrapper:hover {
+    border-color: #ff00f0;
+    transform: scale(1.02);
+  }
+  
+  /* Fit and crop the logos inside the wrapper */
   .croppedImage {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* or object-fit: contain; if needed */
+    object-fit: cover;
     transform: scale(1.01);
   }
   
-  /* Responsive styling */
+  /* Larger screens: keep steps side by side if desired */
+  /* In this example, we still show them stacked for clarity */
+  @media (min-width: 768px) {
+    .step {
+      flex-direction: row;
+    }
+  }
+  
+  /* Mobile-first: center step content on narrow screens */
   @media (max-width: 600px) {
     .step {
       flex-direction: column;
       align-items: center;
+      text-align: center;
     }
   
     .stepNumber {
@@ -80,7 +120,7 @@
     }
   
     .stepContent {
-      text-align: center;
+      width: 100%;
     }
   
     .storeLinks {

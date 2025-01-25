@@ -2,16 +2,27 @@ import React from "react";
 import Image from "next/image";
 import styles from "./AcceptReferral.module.css";
 
+/**
+ * Optional: If you want to use a modern Google font through next/font:
+ */
+// import { Poppins } from 'next/font/google';
+// const poppins = Poppins({ weight: ["400", "600"], subsets: ["latin"] });
+
 export default function AcceptReferral() {
   return (
+    /**
+     * If using a Next.js Google font import above, wrap your container like:
+     * <div className={`${styles.container} ${poppins.className}`}>
+     */
     <div className={styles.container}>
       <h2 className={styles.heading}>How it works</h2>
+
       <div className={styles.steps}>
         {/* Step 1 */}
         <div className={styles.step}>
           <div className={styles.stepNumber}>1</div>
           <div className={styles.stepContent}>
-            <p>Download the app by clicking these links:</p>
+            <p>Download the app:</p>
             <div className={styles.storeLinks}>
               <div className={styles.imgWrapper}>
                 <a
@@ -28,6 +39,7 @@ export default function AcceptReferral() {
                   />
                 </a>
               </div>
+
               <div className={styles.imgWrapper}>
                 <a
                   href="https://play.google.com/store/apps/details?id=com.mycompany.mesh&hl=en_US&gl=US&pli=1"
