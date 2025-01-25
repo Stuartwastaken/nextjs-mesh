@@ -88,7 +88,7 @@ export default function AcceptReferral({
         <div className={styles.step}>
           <div className={styles.stepNumber}>3</div>
           <div className={styles.stepContent}>
-          <p>VVV Come back to this page and click here VVV</p>
+          <p>Come back to this page and click here</p>
             {/* The button that triggers the deep link */}
             <button className={styles.claimButton} onClick={handleClaimRewards}>
               Claim Rewards
