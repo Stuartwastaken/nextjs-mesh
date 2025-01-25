@@ -4,6 +4,7 @@ import Head from "next/head";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { generateQRCode } from "../lib/validations/utils/generateQRCode";
 import { decompressBase64Zlib } from "@/lib/validations/utils/decompressBase64Zlib";
+import AcceptReferral from "./components/AcceptReferral";
 
 type HomeProps = {
   userRef: string;
@@ -94,33 +95,7 @@ export default function Home({
         <h1 className="customFont text-6xl font-bold mb-12 uppercase">Mesh</h1>
         <div className="flex flex-col items-center justify-center mb-12">
           {route === "acceptReferral" ? (
-            <div className="flex flex-col items-center">
-              <a
-                href="https://apps.apple.com/us/app/mesh-four-people-together/id6446823257"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mb-4"
-              >
-                <Image
-                  src="/app_store_logo.png"
-                  alt="Download on the App Store"
-                  width={200}
-                  height={60}
-                />
-              </a>
-              <a
-                href="https://play.google.com/store/apps/details?id=com.mycompany.mesh&hl=en_US&gl=US&pli=1"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  src="/google_play_logo.png"
-                  alt="Get it on Google Play"
-                  width={200}
-                  height={60}
-                />
-              </a>
-            </div>
+           AcceptReferral()
           ) : qrCodeImage ? (
             <Image
               src={qrCodeImage}

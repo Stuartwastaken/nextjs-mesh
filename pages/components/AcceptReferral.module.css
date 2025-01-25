@@ -1,0 +1,90 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .heading {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .steps {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* Single step container */
+  .step {
+    display: flex;
+    align-items: flex-start;
+    margin: 1rem 0;
+  }
+  
+  .stepNumber {
+    min-width: 40px;
+    min-height: 40px;
+    background-color: #0070f3;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+  }
+  
+  .stepContent {
+    flex: 1;
+  }
+  
+  .storeLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  /* Wrapper for store logos to add border and hide edges */
+  .imgWrapper {
+    position: relative;
+    width: 200px;
+    height: 60px;
+    border: 2px solid #000; /* black border */
+    overflow: hidden;
+  }
+  
+  /* Slightly scale the image so any white edges are hidden */
+  .croppedImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* or object-fit: contain; if needed */
+    transform: scale(1.01);
+  }
+  
+  /* Responsive styling */
+  @media (max-width: 600px) {
+    .step {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .stepNumber {
+      margin-bottom: 0.5rem;
+    }
+  
+    .stepContent {
+      text-align: center;
+    }
+  
+    .storeLinks {
+      justify-content: center;
+    }
+  }
+  
