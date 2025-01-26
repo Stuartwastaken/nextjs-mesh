@@ -8,10 +8,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-  }
-  
-  /* Heading with a slight neon-like gradient */
-  .heading {
+    /* If you want the container to also have rounded corners */
+    border-radius: 38px;
+}
+
+/* Heading with a slight neon-like gradient */
+.heading {
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 2rem;
@@ -19,146 +21,154 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
-  }
-  
-  /* Steps container */
-  .steps {
+    /* Optionally, add border-radius if needed */
+    border-radius: 38px;
+}
+
+/* Steps container */
+.steps {
     display: flex;
     flex-direction: column;
     width: 100%;
     max-width: 800px;
-  }
-  
-  /* Single step layout */
-  .step {
+    /* Optionally, add border-radius if needed */
+    border-radius: 38px;
+}
+
+/* Single step layout */
+.step {
     display: flex;
     align-items: center; /* Vertically center step number and content */
     margin: 1.5rem 0;
     position: relative;
     padding: 1rem;
     border: 1px solid #222;
-    border-radius: 8px;
+    border-radius: 38px; /* Updated from 8px to 38px */
     transition: transform 0.3s ease;
-  }
-  
-  /* Slight hover elevation for a modern feel */
-  .step:hover {
+}
+
+/* Slight hover elevation for a modern feel */
+.step:hover {
     transform: translateY(-3px);
-  }
-  
-  /* Step number with a glowing background */
-  .stepNumber {
+}
+
+/* Step number with a glowing background */
+.stepNumber {
     min-width: 48px;
     min-height: 48px;
     background: linear-gradient(135deg, #ff00f0 0%, #00ffd5 100%);
     color: #000;
     font-weight: bold;
-    border-radius: 50%;
+    border-radius: 50%; /* Keeping it circular */
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 1rem;
     flex-shrink: 0;
     flex-grow: 0;
-  }
-  
-  /* Step text content */
-  .stepContent {
+    /* If you prefer a fixed border-radius, set it to 38px */
+    /* border-radius: 38px; */
+}
+
+/* Step text content */
+.stepContent {
     flex: 1;
     text-align: center; /* Center text horizontally */
-  }
-  
-  .stepContent p {
+}
+
+.stepContent p {
     margin: 0.5rem 0;
     /* Remove margin-left to center text */
-  }
-  
-  /* Store links row */
-  .storeLinks {
+}
+
+/* Store links row */
+.storeLinks {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 0.75rem;
     justify-content: center; /* Center store links horizontally */
-  }
-  
-  /* Image wrapper to crop and hide edges */
-  .imgWrapper {
+    /* Optionally, add border-radius if needed */
+    border-radius: 38px;
+}
+
+/* Image wrapper to crop and hide edges */
+.imgWrapper {
     position: relative;
     width: 200px;
     height: 60px;
     border: 2px solid #444; /* Dark border for subtle accent */
-    border-radius: 4px;
+    border-radius: 38px; /* Updated from 4px to 38px */
     overflow: hidden;
     transition: border-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  /* Zoom on hover */
-  .imgWrapper:hover {
+}
+
+/* Zoom on hover */
+.imgWrapper:hover {
     border-color: #ff00f0;
     transform: scale(1.02);
-  }
-  
-  /* Fit and crop the logos inside the wrapper */
-  .croppedImage {
+}
+
+/* Fit and crop the logos inside the wrapper */
+.croppedImage {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transform: scale(1.01);
-  }
-  
-  /* Larger screens: keep steps side by side if desired */
-  @media (min-width: 768px) {
+}
+
+/* Larger screens: keep steps side by side if desired */
+@media (min-width: 768px) {
     .step {
-      flex-direction: row;
+        flex-direction: row;
     }
-  
+
     .stepContent {
-      text-align: left; /* Align text to the left on larger screens */
+        text-align: left; /* Align text to the left on larger screens */
     }
-  }
-  
-  /* Mobile-first: center step content on narrow screens */
-  @media (max-width: 600px) {
+}
+
+/* Mobile-first: center step content on narrow screens */
+@media (max-width: 600px) {
     .step {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
-  
+
     .stepNumber {
-      margin-bottom: 0.5rem;
+        margin-bottom: 0.5rem;
     }
-  
+
     .stepContent {
-      width: 100%;
+        width: 100%;
     }
-  
+
     .storeLinks {
-      justify-content: center;
+        justify-content: center;
     }
-  }
-  
-  /* ============================================= */
-  /* NEW: Claim Rewards button styles and animation */
-  /* ============================================= */
-  
-  @keyframes pulseReward {
+}
+
+/* ============================================= */
+/* NEW: Claim Rewards button styles and animation */
+/* ============================================= */
+
+@keyframes pulseReward {
     0% {
-      transform: scale(1);
-      box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
     }
     50% {
-      transform: scale(1.2);
-      box-shadow: 0 0 25px rgba(255, 0, 240, 0.3);
+        transform: scale(1.2);
+        box-shadow: 0 0 25px rgba(255, 0, 240, 0.3);
     }
     100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
     }
-  }
-  
-  .claimButton {
+}
+
+.claimButton {
     background: linear-gradient(135deg, #ff00f0 0%, #00ffd5 100%);
     color: #000;
     border: none;
@@ -166,25 +176,24 @@
     font-size: 1rem;
     margin-top: 1rem;
     font-weight: 600;
-    border-radius: 4px;
+    border-radius: 38px; /* Updated from 4px to 38px */
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     animation: pulseReward 2.5s infinite ease-in-out;
-  }
-  
-  .claimButton:hover {
+}
+
+.claimButton:hover {
     transform: translateY(-2px) scale(1.2);
     box-shadow: 0 8px 15px rgba(255, 0, 240, 0.2);
-  }
-  
-  .claimButton:active {
+}
+
+.claimButton:active {
     transform: translateY(0) scale(1);
     box-shadow: none;
-  }
-  
-  /* Optional: Add focus styles for accessibility */
-  .claimButton:focus {
+}
+
+/* Optional: Add focus styles for accessibility */
+.claimButton:focus {
     outline: 2px solid #00ffd5;
     outline-offset: 2px;
-  }
-  
+}
