@@ -31,10 +31,12 @@ export default function Home({
   // Your domain or base path. Adjust if needed:
   const baseUrl = "https://nextjs-mesh-seven.vercel.app";
 
-  // Depending on the route, choose either the static or dynamic OG image:
+  // Use a static image for "invitedConfirm" and "referAFriend"
   const ogImageUrl =
     route === "invitedConfirm"
       ? "/mesh_invite_two.png"
+      : route === "referAFriend"
+      ? "/mesh_refer_a_friend.jpeg"
       : `${baseUrl}/api/og?` +
         `pfp=${encodeURIComponent(pfp)}&` +
         `name=${encodeURIComponent(name)}&` +
@@ -77,7 +79,6 @@ export default function Home({
       }
     }
     // When route === "acceptReferral", we do NOT auto-redirect
-    // (we just show the instructions and the Claim Rewards button)
   }, [userRef, location, pfp, name, route, referralHash]);
 
   return (

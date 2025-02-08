@@ -1,4 +1,3 @@
-// pages/api/og.tsx
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import React from "react";
@@ -6,12 +5,14 @@ import { getExifOrientation } from "../../lib/validations/utils/getExifOrientati
 import { decompressBase64Zlib } from "@/lib/validations/utils/decompressBase64Zlib";
 import { orientationToTransform } from "@/lib/validations/utils/orientationToTransform";
 
-
-
 /**
  * Checks size -> fallback
  */
-function checkMaxSizeOrFallback(bufferSize: number, name: string, maxBytes: number = 8_000_000) {
+function checkMaxSizeOrFallback(
+  bufferSize: number,
+  name: string,
+  maxBytes: number = 8_000_000
+) {
   if (bufferSize > maxBytes) {
     return new ImageResponse(
       <div
@@ -48,6 +49,25 @@ export default async function handler(req: NextRequest) {
   const userRef = searchParams.get("userRef") ?? "na";
   const referralHash = searchParams.get("referralHash") ?? "na";
 
+  // If route is "referAFriend", serve a static image from the public folder.
+  if (route === "referAFriend") {
+    const staticImageUrl = new URL(
+      "../../public/mesh_refer_a_friend.png",
+      import.meta.url
+    );
+    const staticImageRes = await fetch(staticImageUrl);
+    if (!staticImageRes.ok) {
+      return new Response("Failed to load static image", { status: 500 });
+    }
+    const imageBuffer = await staticImageRes.arrayBuffer();
+    return new Response(imageBuffer, {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=31536000, immutable",
+      },
+    });
+  }
+
   let imageUrl = "";
   try {
     imageUrl = decompressBase64Zlib(encodedPfp);
@@ -71,7 +91,20 @@ export default async function handler(req: NextRequest) {
 
   if (!imageUrl || imageUrl === "na") {
     return new ImageResponse(
-      <div style={{  }}>Error: No valid image URL</div>,
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 20,
+          color: "white",
+          background: "black",
+          width: "600px",
+          height: "400px",
+        }}
+      >
+        Error: No valid image URL
+      </div>,
       { width: 600, height: 400 }
     );
   }
@@ -96,11 +129,11 @@ export default async function handler(req: NextRequest) {
   // Optional custom font
   let fontData: ArrayBuffer | null = null;
   try {
-    fontData = await fetch(new URL("../../public/TYPEWR__.ttf", import.meta.url)).then(
-      (res) => res.arrayBuffer()
-    );
+    fontData = await fetch(
+      new URL("../../public/TYPEWR__.ttf", import.meta.url)
+    ).then((res) => res.arrayBuffer());
   } catch (fontError) {
-    // ignore
+    // ignore font error
   }
 
   return new ImageResponse(
