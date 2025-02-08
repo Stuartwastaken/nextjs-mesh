@@ -52,7 +52,7 @@ export default async function handler(req: NextRequest) {
   // If route is "referAFriend", serve a static image from the public folder.
   if (route === "referAFriend") {
     const staticImageUrl = new URL(
-      "../../public/refer_a_friend.jpeg",
+      "../../public/refer_a_friend.webp",
       import.meta.url
     );
     const staticImageRes = await fetch(staticImageUrl);
