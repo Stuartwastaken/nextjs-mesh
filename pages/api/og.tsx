@@ -49,7 +49,7 @@ export default async function handler(req: NextRequest) {
   const userRef = searchParams.get("userRef") ?? "na";
   const referralHash = searchParams.get("referralHash") ?? "na";
 
-  // If route is "referAFriend", serve a static image from the public folder.
+  // For the referAFriend route, simply serve the static image.
   if (route === "referAFriend") {
     const staticImageUrl = new URL(
       "../../public/refer_a_friend.png",
@@ -75,7 +75,6 @@ export default async function handler(req: NextRequest) {
     imageUrl = "na";
   }
 
-  // Decide the top/bottom text
   let topText = "";
   let bottomText = "";
   if (route === "invitedConfirm") {
@@ -83,7 +82,7 @@ export default async function handler(req: NextRequest) {
     bottomText = `${name}, We are inviting you to coffee this Saturday`;
   } else if (route === "acceptReferral") {
     topText = `VIP Invite from ${name}`;
-    bottomText = `Join me here on Mesh! you can thank me later ;) `;
+    bottomText = `Join me here on Mesh! you can thank me later ;)`;
   } else {
     topText = `VIP Invite from ${name}`;
     bottomText = `Join me here on Mesh! you can thank me later ;)`;
@@ -109,7 +108,6 @@ export default async function handler(req: NextRequest) {
     );
   }
 
-  // Try fetching the image to parse orientation
   let orientation = 1;
   try {
     const resp = await fetch(imageUrl);
@@ -121,17 +119,16 @@ export default async function handler(req: NextRequest) {
 
     orientation = getExifOrientation(buffer);
   } catch (err) {
-    orientation = 1; // fallback
+    orientation = 1;
   }
 
   const transformStyle = orientationToTransform(orientation);
 
-  // Optional custom font
   let fontData: ArrayBuffer | null = null;
   try {
-    fontData = await fetch(
-      new URL("../../public/TYPEWR__.ttf", import.meta.url)
-    ).then((res) => res.arrayBuffer());
+    fontData = await fetch(new URL("../../public/TYPEWR__.ttf", import.meta.url)).then(
+      (res) => res.arrayBuffer()
+    );
   } catch (fontError) {
     // ignore font error
   }
@@ -151,7 +148,6 @@ export default async function handler(req: NextRequest) {
           backgroundColor: "gray",
         }}
       >
-        {/* Blurred background with orientation fix */}
         <img
           src={imageUrl}
           alt=""
@@ -179,7 +175,6 @@ export default async function handler(req: NextRequest) {
           {topText}
         </div>
 
-        {/* Center round avatar */}
         <img
           src={imageUrl}
           alt=""
