@@ -36,7 +36,7 @@ export default function Home({
     route === "invitedConfirm"
       ? "/mesh_invite_two.png"
       : route === "referAFriend"
-      ? "/mesh_refer_a_friend.webp"
+      ? "/mesh_refer_a_friend.png"
       : `${baseUrl}/api/og?` +
         `pfp=${encodeURIComponent(pfp)}&` +
         `name=${encodeURIComponent(name)}&` +
