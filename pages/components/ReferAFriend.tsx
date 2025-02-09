@@ -13,7 +13,7 @@ export default function ReferAFriend() {
     <div className={`${styles.container} ${poppins.className}`}>
       <h2 className={styles.heading}>Refer a Friend</h2>
       <p className={styles.message}>
-        Refer people in app to get free mesh for life!
+        Refer people in app to get free Mesh for life!
       </p>
       <button className={styles.actionButton} onClick={handleClick}>
         Click here!
