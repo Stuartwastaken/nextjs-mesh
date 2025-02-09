@@ -43,13 +43,23 @@ export default async function handler(req: NextRequest) {
   const url = new URL(req.url);
   const { searchParams } = url;
 
+  // Extract query parameters
   const name = searchParams.get("name") ?? "na";
   const route = searchParams.get("route") ?? "na";
   const encodedPfp = searchParams.get("pfp") ?? "na";
   const userRef = searchParams.get("userRef") ?? "na";
   const referralHash = searchParams.get("referralHash") ?? "na";
 
-  // For the referAFriend route, simply serve the static image.
+  // Define dynamic dimensions based on the route
+  let width = 630;
+  let height = 1200;
+
+  if (route === "referAFriend") {
+    width = 800;
+    height = 800;
+  }
+
+  // Serve static image for the referAFriend route
   if (route === "referAFriend") {
     const staticImageUrl = new URL(
       "../../public/refer_a_friend.png",
@@ -68,6 +78,7 @@ export default async function handler(req: NextRequest) {
     });
   }
 
+  // Decode the profile picture URL
   let imageUrl = "";
   try {
     imageUrl = decompressBase64Zlib(encodedPfp);
@@ -75,19 +86,22 @@ export default async function handler(req: NextRequest) {
     imageUrl = "na";
   }
 
+  // Define text content based on the route
   let topText = "";
   let bottomText = "";
+
   if (route === "invitedConfirm") {
     topText = "Accept Invite Request";
     bottomText = `${name}, We are inviting you to coffee this Saturday`;
   } else if (route === "acceptReferral") {
     topText = `VIP Invite from ${name}`;
-    bottomText = `Join me here on Mesh! you can thank me later ;)`;
+    bottomText = `Join me here on Mesh! You can thank me later ;)`;
   } else {
     topText = `VIP Invite from ${name}`;
-    bottomText = `Join me here on Mesh! you can thank me later ;)`;
+    bottomText = `Join me here on Mesh! You can thank me later ;)`;
   }
 
+  // Handle missing or invalid image URLs
   if (!imageUrl || imageUrl === "na") {
     return new ImageResponse(
       <div
@@ -95,44 +109,50 @@ export default async function handler(req: NextRequest) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 20,
+          fontSize: 48,
           color: "white",
           background: "black",
-          width: "600px",
-          height: "400px",
+          width: `${width}px`,
+          height: `${height}px`,
         }}
       >
         Error: No valid image URL
       </div>,
-      { width: 600, height: 400 }
+      { width, height }
     );
   }
 
+  // Fetch and process the image
   let orientation = 1;
   try {
     const resp = await fetch(imageUrl);
     if (!resp.ok) throw new Error(`status = ${resp.status}`);
-
     const buffer = await resp.arrayBuffer();
+
+    // Check image size
     const fallbackLarge = checkMaxSizeOrFallback(buffer.byteLength, name, 8_000_000);
     if (fallbackLarge) return fallbackLarge;
 
+    // Get EXIF orientation
     orientation = getExifOrientation(buffer);
   } catch (err) {
-    orientation = 1;
+    orientation = 1; // Default orientation
   }
 
+  // Apply orientation transformation
   const transformStyle = orientationToTransform(orientation);
 
+  // Load custom font (optional)
   let fontData: ArrayBuffer | null = null;
   try {
     fontData = await fetch(new URL("../../public/TYPEWR__.ttf", import.meta.url)).then(
       (res) => res.arrayBuffer()
     );
   } catch (fontError) {
-    // ignore font error
+    console.warn("Failed to load custom font. Falling back to system font.");
   }
 
+  // Generate the Open Graph image
   return new ImageResponse(
     (
       <div
@@ -142,12 +162,13 @@ export default async function handler(req: NextRequest) {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          width: "620px",
-          height: "1155px",
+          width: `${width}px`,
+          height: `${height}px`,
           color: "#FFF",
           backgroundColor: "gray",
         }}
       >
+        {/* Background image */}
         <img
           src={imageUrl}
           alt=""
@@ -163,9 +184,10 @@ export default async function handler(req: NextRequest) {
           }}
         />
 
+        {/* Top text */}
         <div
           style={{
-            fontSize: "72px",
+            fontSize: route === "referAFriend" ? "64px" : "72px",
             fontWeight: 700,
             marginBottom: "100px",
             textAlign: "center",
@@ -175,6 +197,7 @@ export default async function handler(req: NextRequest) {
           {topText}
         </div>
 
+        {/* Profile picture */}
         <img
           src={imageUrl}
           alt=""
@@ -189,6 +212,7 @@ export default async function handler(req: NextRequest) {
           }}
         />
 
+        {/* Bottom text */}
         <div
           style={{
             fontSize: "32px",
@@ -203,8 +227,8 @@ export default async function handler(req: NextRequest) {
       </div>
     ),
     {
-      width: 620,
-      height: 1155,
+      width,
+      height,
       fonts: fontData
         ? [
             {
@@ -218,4 +242,3 @@ export default async function handler(req: NextRequest) {
     }
   );
 }
-
