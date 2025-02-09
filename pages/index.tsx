@@ -88,7 +88,7 @@ export default function Home({
         <meta property="og:image:height" content="1200" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en_US" />
-        <meta property="og:url" content={`${baseUrl}/${route}`} />
+        <meta property="og:url" content={`${baseUrl}/?route=${route}`} />
         <meta property="og:site_name" content="Mesh" />
       </Head>
       <main className="bg-black min-h-screen text-white flex flex-col items-center justify-center px-8 p-48">
