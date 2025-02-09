@@ -103,8 +103,9 @@ export default function Home({
         <div className="triangleTag" />
         <h1 className={`${poppins.className} text-6xl font-bold mb-12 uppercase`}>
           Mesh
+          <Analytics/>
         </h1>
-        <Analytics/>
+        
 
         <div className="flex flex-col items-center justify-center mb-12">
           {route === "acceptReferral" ? (
