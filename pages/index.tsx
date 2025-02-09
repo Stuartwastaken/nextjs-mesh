@@ -5,6 +5,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { generateQRCode } from "../lib/validations/utils/generateQRCode";
 import AcceptReferral from "./components/AcceptReferral";
 import ReferAFriend from "./components/ReferAFriend"; // <-- import your new component
+import { Analytics } from "@vercel/analytics/react"
 
 import { Poppins } from "next/font/google";
 const poppins = Poppins({ weight: ["400", "600"], subsets: ["latin"] });
@@ -103,6 +104,7 @@ export default function Home({
         <h1 className={`${poppins.className} text-6xl font-bold mb-12 uppercase`}>
           Mesh
         </h1>
+        <Analytics/>
 
         <div className="flex flex-col items-center justify-center mb-12">
           {route === "acceptReferral" ? (
