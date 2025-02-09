@@ -14,6 +14,7 @@ export default function ReferAFriend() {
       <h2 className={styles.heading}>Refer a Friend</h2>
       <p className={styles.message}>
         Refer people in app to get free Mesh for life!
+         Click here if you have Mesh downloaded already
       </p>
       <button className={styles.actionButton} onClick={handleClick}>
         Click here!
