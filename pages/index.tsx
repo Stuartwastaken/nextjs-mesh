@@ -5,7 +5,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { generateQRCode } from "../lib/validations/utils/generateQRCode";
 import AcceptReferral from "./components/AcceptReferral";
 import ReferAFriend from "./components/ReferAFriend"; // <-- import your new component
-import { Analytics } from '@vercel/analytics/next';
+
 
 
 import { Poppins } from "next/font/google";
@@ -128,7 +128,7 @@ export default function Home({
           <p className="text-xl font-light">PLEASE SCAN ON YOUR MOBILE</p>
         )}
       </main>
-      <Analytics/>
+
     </>
   );
 }
