@@ -3,8 +3,8 @@ import Image from "next/image";
 import Head from "next/head";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { generateQRCode } from "../lib/validations/utils/generateQRCode";
-import { decompressBase64Zlib } from "@/lib/validations/utils/decompressBase64Zlib";
 import AcceptReferral from "./components/AcceptReferral";
+import ReferAFriend from "./components/ReferAFriend"; // <-- import your new component
 
 import { Poppins } from "next/font/google";
 const poppins = Poppins({ weight: ["400", "600"], subsets: ["latin"] });
@@ -29,7 +29,7 @@ export default function Home({
   const [qrCodeImage, setQrCodeImage] = useState<string | null>(null);
   const baseUrl = "https://nextjs-mesh-seven.vercel.app";
 
-  // Generate OGP image URL with fallback
+  // Decide the OG image:
   const ogImageUrl =
     route === "invitedConfirm"
       ? "/mesh_invite_two.png"
@@ -42,9 +42,10 @@ export default function Home({
         `userRef=${encodeURIComponent(userRef)}&` +
         `referralHash=${encodeURIComponent(referralHash)}&` +
         `route=${encodeURIComponent(route)}`
-      : "/default_og_image.png"; // Fallback image
+      : "/default_og_image.png"; // fallback image
 
   useEffect(() => {
+    // Construct the deep link:
     let deepLinkURL = "";
     if (route === "invitedConfirm") {
       deepLinkURL =
@@ -59,6 +60,9 @@ export default function Home({
         `name=${name}&` +
         `userRef=${userRef}&` +
         `referralHash=${referralHash}`;
+    } else if (route === "referAFriend") {
+      // For referAFriend, we do NOT auto-redirect, so do nothing special here.
+      return;
     } else {
       deepLinkURL =
         `mesh://meshapp.us/${route}?` +
@@ -68,8 +72,10 @@ export default function Home({
         `name=${name}`;
     }
 
-    if (route !== "acceptReferral") {
+    // For all routes EXCEPT acceptReferral or referAFriend, auto-redirect and generate QR
+    if (route !== "acceptReferral" && route !== "referAFriend") {
       generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
+
       if (typeof window !== "undefined" && window.location.protocol !== "mesh:") {
         window.location.href = deepLinkURL;
       }
@@ -91,27 +97,38 @@ export default function Home({
         <meta property="og:url" content={`${baseUrl}/?route=${route}`} />
         <meta property="og:site_name" content="Mesh" />
       </Head>
+
       <main className="bg-black min-h-screen text-white flex flex-col items-center justify-center px-8 p-48">
         <div className="triangleTag" />
         <h1 className={`${poppins.className} text-6xl font-bold mb-12 uppercase`}>
           Mesh
         </h1>
+
         <div className="flex flex-col items-center justify-center mb-12">
           {route === "acceptReferral" ? (
+            // Show AcceptReferral; do not redirect or show QR
             <AcceptReferral name={name} userRef={userRef} referralHash={referralHash} />
+          ) : route === "referAFriend" ? (
+            // Show ReferAFriend; do not redirect or show QR
+            <ReferAFriend />
           ) : qrCodeImage ? (
+            // For other routes, show the generated QR code
             <Image src={qrCodeImage} alt="QR Code" width={600} height={600} className="mb-4" />
           ) : (
             <p>Loading QR Code...</p>
           )}
         </div>
-        {route !== "acceptReferral" && (
+
+        {/* Show "PLEASE SCAN" only if we are in the QR route (not acceptReferral/referAFriend) */}
+        {route !== "acceptReferral" && route !== "referAFriend" && (
           <p className="text-xl font-light">PLEASE SCAN ON YOUR MOBILE</p>
         )}
       </main>
     </>
   );
 }
+
+// Grab everything from query so you can pass them to the page
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {

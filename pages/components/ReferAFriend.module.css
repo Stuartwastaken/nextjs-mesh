@@ -1,0 +1,74 @@
+/* Container: black background with centered content */
+.container {
+    background-color: #000;
+    color: #fff;
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Heading with a neon-like gradient */
+  .heading {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(90deg, #ff00f0, #00ffd5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+  }
+  
+  /* Message text styling */
+  .message {
+    font-size: 1.25rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  /* Action button styling and animation */
+  .actionButton {
+    background: linear-gradient(135deg, #ff00f0 0%, #00ffd5 100%);
+    color: #000;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-radius: 38px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: pulse 2.5s infinite ease-in-out;
+  }
+  
+  .actionButton:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 15px rgba(255, 0, 240, 0.2);
+  }
+  
+  .actionButton:active {
+    transform: translateY(0) scale(1);
+    box-shadow: none;
+  }
+  
+  .actionButton:focus {
+    outline: 2px solid #00ffd5;
+    outline-offset: 2px;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
+    }
+    50% {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(255, 0, 240, 0.3);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
+    }
+  }
+  
