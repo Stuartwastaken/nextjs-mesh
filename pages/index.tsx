@@ -29,22 +29,23 @@ export default function Home({
   const [qrCodeImage, setQrCodeImage] = useState<string | null>(null);
   const baseUrl = "https://nextjs-mesh-seven.vercel.app";
 
-  // Use a static image for the invitedConfirm and referAFriend routes.
+  // Generate OGP image URL with fallback
   const ogImageUrl =
     route === "invitedConfirm"
       ? "/mesh_invite_two.png"
       : route === "referAFriend"
       ? "/refer_a_friend.png"
-      : `${baseUrl}/api/og?` +
+      : pfp && name && userRef && referralHash
+      ? `${baseUrl}/api/og?` +
         `pfp=${encodeURIComponent(pfp)}&` +
         `name=${encodeURIComponent(name)}&` +
         `userRef=${encodeURIComponent(userRef)}&` +
         `referralHash=${encodeURIComponent(referralHash)}&` +
-        `route=${encodeURIComponent(route)}`;
+        `route=${encodeURIComponent(route)}`
+      : "/default_og_image.png"; // Fallback image
 
   useEffect(() => {
     let deepLinkURL = "";
-
     if (route === "invitedConfirm") {
       deepLinkURL =
         `mesh://meshapp.us/invitedConfirm?` +
@@ -67,10 +68,8 @@ export default function Home({
         `name=${name}`;
     }
 
-    // For all routes except "acceptReferral", generate the QR code and auto-redirect.
     if (route !== "acceptReferral") {
       generateQRCode(deepLinkURL).then((img) => setQrCodeImage(img));
-
       if (typeof window !== "undefined" && window.location.protocol !== "mesh:") {
         window.location.href = deepLinkURL;
       }
@@ -88,13 +87,15 @@ export default function Home({
         <meta property="og:image:width" content="630" />
         <meta property="og:image:height" content="1200" />
         <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:url" content={`${baseUrl}/${route}`} />
+        <meta property="og:site_name" content="Mesh" />
       </Head>
       <main className="bg-black min-h-screen text-white flex flex-col items-center justify-center px-8 p-48">
         <div className="triangleTag" />
         <h1 className={`${poppins.className} text-6xl font-bold mb-12 uppercase`}>
           Mesh
         </h1>
-
         <div className="flex flex-col items-center justify-center mb-12">
           {route === "acceptReferral" ? (
             <AcceptReferral name={name} userRef={userRef} referralHash={referralHash} />
@@ -111,7 +112,6 @@ export default function Home({
     </>
   );
 }
-
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
