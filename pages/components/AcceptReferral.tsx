@@ -43,15 +43,6 @@ export default function AcceptReferral({
 
   return (
     <div className={`${styles.container} ${poppins.className}`}>
-      <div className={styles.headerLogo}>
-        <Image 
-          src="/mesh_logo.png" 
-          alt="Mesh Logo" 
-          width={140}
-          height={50}
-          priority
-        />
-      </div>
       
       <div className={styles.heroSection}>
         <h1 className={styles.heading}>Meet New Friends Over Coffee</h1>
