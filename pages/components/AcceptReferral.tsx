@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import styles from "./AcceptReferral.module.css";
+import { initScrollAnimations, addAnimationDelays } from "./ScrollAnimations";
 
 // Import Google Fonts with additional weights
 import { Poppins } from "next/font/google";
@@ -26,35 +27,49 @@ export default function AcceptReferral({
   const handleClaimRewards = () => {
     const deepLinkURL =
       `mesh://meshapp.us/acceptReferral?` +
-      `name=${name}&` +
-      `userRef=${userRef}&` +
-      `referralHash=${referralHash}`;
+      `name=${encodeURIComponent(name || '')}` +
+      `&userRef=${encodeURIComponent(userRef)}` +
+      `&referralHash=${encodeURIComponent(referralHash)}`;
 
     // On click, attempt to open the app via deep link:
     window.location.href = deepLinkURL;
   };
 
+  // Initialize scroll animations on component mount
+  useEffect(() => {
+    initScrollAnimations();
+    addAnimationDelays();
+  }, []);
+
   return (
     <div className={`${styles.container} ${poppins.className}`}>
-
+      <div className={styles.headerLogo}>
+        <Image 
+          src="/mesh_logo.png" 
+          alt="Mesh Logo" 
+          width={140}
+          height={50}
+          priority
+        />
+      </div>
       
       <div className={styles.heroSection}>
         <h1 className={styles.heading}>Meet New Friends Over Coffee</h1>
         <p className={styles.subheading}>
-          Join friendly groups of 4 at local coffee shops every Saturday morning
+          Join real people your age at local coffee shops every Saturday morning
         </p>
         
         <div className={styles.highlightBox}>
           <div className={styles.highlightIcon}>☕</div>
           <div className={styles.highlightContent}>
-           <p>Make meaningful connections in a relaxed, safe environment.</p>
+           <p><strong>{name ? name : 'Someone'}</strong> has invited you to join their Mesh community!</p>
           </div>
         </div>
       </div>
 
       <div className={styles.steps}>
         {/* Step 1 */}
-        <div className={styles.step}>
+        <div className={styles.step} id="step-1">
           <div className={styles.stepNumber}>1</div>
           <div className={styles.stepContent}>
             <h3 className={styles.stepTitle}>Download Mesh</h3>
@@ -65,6 +80,7 @@ export default function AcceptReferral({
                   href="https://apps.apple.com/us/app/mesh-four-people-together/id6446823257"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Download on the App Store"
                 >
                   <Image
                     src="/app_store_logo.png"
@@ -81,6 +97,7 @@ export default function AcceptReferral({
                   href="https://play.google.com/store/apps/details?id=com.mycompany.mesh&hl=en_US&gl=US&pli=1"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Get it on Google Play"
                 >
                   <Image
                     src="/google_play_logo.png"
@@ -96,7 +113,7 @@ export default function AcceptReferral({
         </div>
 
         {/* Step 2 */}
-        <div className={styles.step}>
+        <div className={styles.step} id="step-2">
           <div className={styles.stepNumber}>2</div>
           <div className={styles.stepContent}>
             <h3 className={styles.stepTitle}>Create Your Profile</h3>
@@ -105,7 +122,7 @@ export default function AcceptReferral({
         </div>
 
         {/* Step 3 */}
-        <div className={styles.step}>
+        <div className={styles.step} id="step-3">
           <div className={styles.stepNumber}>3</div>
           <div className={styles.stepContent}>
             <h3 className={styles.stepTitle}>Verify & Unlock Benefits</h3>
@@ -113,7 +130,7 @@ export default function AcceptReferral({
             <ul className={styles.benefitsList}>
               <li>
                 <span className={styles.benefitIcon}>🎁</span>
-                <span>Send a reward to <strong>{name && name.trim() ? name : 'your friend'}</strong> for inviting you</span>
+                <span>Send a reward to <strong>{name ? name : 'your friend'}</strong> for inviting you</span>
               </li>
               <li>
                 <span className={styles.benefitIcon}>✨</span>
@@ -125,7 +142,11 @@ export default function AcceptReferral({
               </li>
             </ul>
             {/* The button that triggers the deep link */}
-            <button className={styles.claimButton} onClick={handleClaimRewards}>
+            <button 
+              className={styles.claimButton} 
+              onClick={handleClaimRewards}
+              aria-label="Verify referral and claim benefits"
+            >
               Verify Referral & Claim Benefits
             </button>
           </div>
@@ -135,17 +156,17 @@ export default function AcceptReferral({
       <div className={styles.featureSection}>
         <h2 className={styles.featureSectionHeading}>How Mesh Works</h2>
         <div className={styles.features}>
-          <div className={styles.feature}>
+          <div className={styles.feature} id="feature-1">
             <div className={styles.featureIcon}>👋</div>
             <h3>Meet in Person</h3>
             <p>Connect with 3 other people at local coffee shops</p>
           </div>
-          <div className={styles.feature}>
+          <div className={styles.feature} id="feature-2">
             <div className={styles.featureIcon}>🕙</div>
             <h3>Every Saturday at 10am</h3>
             <p>Regular meetups make it easy to fit into your schedule</p>
           </div>
-          <div className={styles.feature}>
+          <div className={styles.feature} id="feature-3">
             <div className={styles.featureIcon}>🏙️</div>
             <h3>Local Community</h3>
             <p>Meet people who live in your neighborhood</p>
@@ -156,7 +177,7 @@ export default function AcceptReferral({
       <div className={styles.testimonialSection}>
         <h2 className={styles.testimonialHeading}>Real Connections, Real Stories</h2>
         <div className={styles.testimonials}>
-          <div className={styles.testimonial}>
+          <div className={styles.testimonial} id="testimonial-1">
             <div className={styles.testimonialHeader}>
               <div className={styles.profileImageContainer}>
                 <Image 
@@ -174,7 +195,7 @@ export default function AcceptReferral({
             </div>
             <p>&quot;I was new to the city and Mesh connected me with amazing people at my local coffee shop. We still meet up every month!&quot;</p>
           </div>
-          <div className={styles.testimonial}>
+          <div className={styles.testimonial} id="testimonial-2">
             <div className={styles.testimonialHeader}>
               <div className={styles.profileImageContainer}>
                 <Image 
@@ -195,10 +216,14 @@ export default function AcceptReferral({
         </div>
       </div>
       
-      <div className={styles.ctaSection}>
+      <div className={styles.ctaSection} id="cta-section">
         <h2>Ready to meet new friends over coffee?</h2>
         <p>Download the app now and establish roots in your community!</p>
-        <button className={styles.mainCTAButton} onClick={handleClaimRewards}>
+        <button 
+          className={styles.mainCTAButton} 
+          onClick={handleClaimRewards}
+          aria-label="Get started with Mesh"
+        >
           Get Started Now
         </button>
       </div>
