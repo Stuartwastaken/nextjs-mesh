@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import styles from "./AcceptReferral.module.css";
-import { initScrollAnimations, addAnimationDelays } from "./ScrollAnimations";
+import { initScrollAnimations, addAnimationDelays } from "../../utils/ScrollAnimations";
 
 // Import Google Fonts with additional weights
 import { Poppins } from "next/font/google";
