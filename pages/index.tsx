@@ -63,7 +63,7 @@ export default function Home({
         `userRef=${userRef}&` +
         `referralHash=${referralHash}`;
     } else if (route === "referAFriend") {
-      // For referAFriend, we do NOT auto-redirect, so do nothing special here.
+      // For referAFriend, we do NOT auto-redirect
       return;
     } else {
       deepLinkURL =

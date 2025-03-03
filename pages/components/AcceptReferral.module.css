@@ -1,112 +1,221 @@
-/* Base container, black background, centered content */
+/* Professional coffee meetup referral page */
 .container {
-    background-color: #000;
-    color: #fff;
+    background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%);
+    color: #2c3e50;
     min-height: 100vh;
-    padding: 2rem 1rem;
+    padding: 4rem 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    /* If you want the container to also have rounded corners */
-    border-radius: 38px;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* Heading with a slight neon-like gradient */
+/* Header logo styles */
+.headerLogo {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* Hero section styles */
+.heroSection {
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 3rem;
+}
+
+/* Elegant heading with subtle blue gradient */
 .heading {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    background: linear-gradient(90deg, #ff00f0, #00ffd5);
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, #3498db, #5dade2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-align: center;
-    /* Optionally, add border-radius if needed */
-    border-radius: 38px;
+    letter-spacing: -0.5px;
+    position: relative;
 }
 
-/* Steps container */
+.heading:after {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #5dade2);
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+/* Subheading style */
+.subheading {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #34495e;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    font-weight: 400;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Highlight box for personalized invitation */
+.highlightBox {
+    background-color: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.15);
+    margin: 2rem auto;
+    max-width: 90%;
+    border-left: 5px solid #3498db;
+}
+
+.highlightIcon {
+    font-size: 2.5rem;
+    margin-right: 1.5rem;
+}
+
+.highlightContent p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+    color: #34495e;
+}
+
+.highlightContent p strong {
+    color: #3498db;
+    font-weight: 600;
+}
+
+/* Steps container with premium spacing */
 .steps {
     display: flex;
     flex-direction: column;
     width: 100%;
     max-width: 800px;
-    /* Optionally, add border-radius if needed */
-    border-radius: 38px;
+    gap: 2rem;
+    margin-bottom: 4rem;
 }
 
-/* Single step layout */
+/* Single step layout with subtle shadows */
 .step {
     display: flex;
-    align-items: center; /* Vertically center step number and content */
-    margin: 1.5rem 0;
+    align-items: center;
+    margin: 0;
     position: relative;
-    padding: 1rem;
-    border: 1px solid #222;
-    border-radius: 38px; /* Updated from 8px to 38px */
-    transition: transform 0.3s ease;
+    padding: 2rem;
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow: 0 10px 30px rgba(176, 209, 236, 0.2);
+    transition: all 0.3s ease;
 }
 
-/* Slight hover elevation for a modern feel */
+/* Elegant hover effect */
 .step:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(176, 209, 236, 0.3);
 }
 
-/* Step number with a glowing background */
+/* Professional step number */
 .stepNumber {
-    min-width: 48px;
-    min-height: 48px;
-    background: linear-gradient(135deg, #ff00f0 0%, #00ffd5 100%);
-    color: #000;
-    font-weight: bold;
-    border-radius: 50%; /* Keeping it circular */
+    min-width: 60px;
+    min-height: 60px;
+    background: linear-gradient(135deg, #3498db 0%, #85c1e9 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 1.5rem;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 1rem;
+    margin-right: 2rem;
     flex-shrink: 0;
     flex-grow: 0;
-    /* If you prefer a fixed border-radius, set it to 38px */
-    /* border-radius: 38px; */
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
 }
 
 /* Step text content */
 .stepContent {
     flex: 1;
-    text-align: center; /* Center text horizontally */
+}
+
+/* Step title styling */
+.stepTitle {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.4rem;
+    color: #2c3e50;
+    font-weight: 600;
 }
 
 .stepContent p {
-    margin: 0.5rem 0;
-    /* Remove margin-left to center text */
+    margin: 0 0 1.25rem 0;
+    font-size: 1.1rem;
+    color: #34495e;
+    font-weight: 400;
+}
+
+/* Benefits list styling */
+.benefitsList {
+    list-style: none;
+    padding: 0;
+    margin: 1.2rem 0;
+}
+
+.benefitsList li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    font-size: 1.05rem;
+    color: #34495e;
+}
+
+.benefitIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 50%;
+    margin-right: 0.8rem;
+    flex-shrink: 0;
+}
+
+.benefitsList li strong {
+    color: #3498db;
+    font-weight: 600;
 }
 
 /* Store links row */
 .storeLinks {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 0.75rem;
-    justify-content: center; /* Center store links horizontally */
-    /* Optionally, add border-radius if needed */
-    border-radius: 38px;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    justify-content: flex-start;
 }
 
-/* Image wrapper to crop and hide edges */
+/* Image wrapper with refined styling */
 .imgWrapper {
     position: relative;
-    width: 200px;
-    height: 60px;
-    border: 2px solid #444; /* Dark border for subtle accent */
-    border-radius: 38px; /* Updated from 4px to 38px */
+    width: 180px;
+    height: 55px;
+    border: none;
+    border-radius: 10px;
     overflow: hidden;
-    transition: border-color 0.3s ease, transform 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Zoom on hover */
+/* Professional hover effect */
 .imgWrapper:hover {
-    border-color: #ff00f0;
-    transform: scale(1.02);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.2);
 }
 
 /* Fit and crop the logos inside the wrapper */
@@ -114,86 +223,485 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1.01);
 }
 
-/* Larger screens: keep steps side by side if desired */
-@media (min-width: 768px) {
-    .step {
-        flex-direction: row;
-    }
-
-    .stepContent {
-        text-align: left; /* Align text to the left on larger screens */
-    }
+/* Claim rewards button with premium styling */
+.claimButton {
+    background: linear-gradient(135deg, #3498db 0%, #85c1e9 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
 }
 
-/* Mobile-first: center step content on narrow screens */
-@media (max-width: 600px) {
-    .step {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .stepNumber {
-        margin-bottom: 0.5rem;
-    }
-
-    .stepContent {
-        width: 100%;
-    }
-
-    .storeLinks {
-        justify-content: center;
-    }
-}
-
-/* ============================================= */
-/* NEW: Claim Rewards button styles and animation */
-/* ============================================= */
-
+/* Sophisticated button glow animation */
 @keyframes pulseReward {
     0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7);
     }
-    50% {
-        transform: scale(1.2);
-        box-shadow: 0 0 25px rgba(255, 0, 240, 0.3);
+    70% {
+        box-shadow: 0 0 0 15px rgba(52, 152, 219, 0);
     }
     100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(255, 0, 240, 0.5);
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
     }
 }
 
 .claimButton {
-    background: linear-gradient(135deg, #ff00f0 0%, #00ffd5 100%);
-    color: #000;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    margin-top: 1rem;
-    font-weight: 600;
-    border-radius: 38px; /* Updated from 4px to 38px */
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    animation: pulseReward 2.5s infinite ease-in-out;
+    animation: pulseReward 2s infinite;
 }
 
 .claimButton:hover {
-    transform: translateY(-2px) scale(1.2);
-    box-shadow: 0 8px 15px rgba(255, 0, 240, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
 }
 
 .claimButton:active {
-    transform: translateY(0) scale(1);
-    box-shadow: none;
+    transform: translateY(1px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
 }
 
-/* Optional: Add focus styles for accessibility */
 .claimButton:focus {
-    outline: 2px solid #00ffd5;
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5), 0 10px 20px rgba(52, 152, 219, 0.3);
+}
+
+/* Feature section styles */
+.featureSection {
+    width: 100%;
+    max-width: 800px;
+    margin: 1rem 0 4rem;
+    text-align: center;
+}
+
+.featureSectionHeading {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 2.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.featureSectionHeading:after {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 3px;
+    background: linear-gradient(90deg, #3498db, #85c1e9);
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.feature {
+    background-color: white;
+    border-radius: 16px;
+    padding: 2rem;
+    flex: 1;
+    min-width: 220px;
+    box-shadow: 0 10px 25px rgba(176, 209, 236, 0.15);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(176, 209, 236, 0.25);
+}
+
+.featureIcon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.feature h3 {
+    margin: 0 0 1rem 0;
+    color: #3498db;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.feature p {
+    margin: 0;
+    color: #34495e;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Testimonial section */
+.testimonialSection {
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+    width: 100%;
+    max-width: 800px;
+}
+
+.testimonialHeading {
+    text-align: center;
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
+.testimonialHeading:after {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 3px;
+    background: linear-gradient(90deg, #3498db, #85c1e9);
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.testimonials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+/* Updated testimonial layout for larger images */
+.testimonial {
+    background-color: white;
+    padding: 1.8rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(176, 209, 236, 0.15);
+    flex: 1;
+    min-width: 280px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(176, 209, 236, 0.25);
+}
+
+.testimonial::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(135deg, #3498db 0%, #85c1e9 100%);
+}
+
+/* Enhanced testimonial header layout */
+.testimonialHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Larger profile image container with enhanced styling */
+.profileImageContainer {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 1.2rem;
+    overflow: hidden;
+    border: 4px solid rgba(52, 152, 219, 0.3);
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.2);
+    flex-shrink: 0;
+    background-color: #f5f5f5;
+    position: relative;
+    z-index: 1;
+}
+
+/* Profile image styling with enhanced effects */
+.profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+}
+
+.profileImageContainer:hover .profileImage {
+    transform: scale(1.08);
+}
+
+.profileImageContainer::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3498db 0%, #85c1e9 100%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profileImageContainer:hover::after {
+    opacity: 1;
+}
+
+/* Enhanced testimonial meta information */
+.testimonialMeta {
+    display: flex;
+    flex-direction: column;
+}
+
+.stars {
+    color: #f1c40f;
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+    letter-spacing: 2px;
+}
+
+.testimonialAuthor {
+    color: #3498db;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.testimonial p {
+    color: #34495e;
+    font-style: italic;
+    margin: 0;
+    line-height: 1.6;
+    font-size: 1.05rem;
+    position: relative;
+    padding-left: 1.2rem;
+}
+
+.testimonial p::before {
+    content: '"';
+    position: absolute;
+    left: 0;
+    top: -3px;
+    font-size: 1.8rem;
+    color: #3498db;
+    opacity: 0.5;
+}
+
+/* CTA Section */
+.ctaSection {
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(176, 209, 236, 0.25);
+    margin-bottom: 4rem;
+    position: relative;
+}
+
+.ctaSection::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 10px;
+    background: linear-gradient(90deg, #3498db, #85c1e9);
+    border-radius: 10px 10px 0 0;
+}
+
+.ctaSection h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.ctaSection p {
+    font-size: 1.2rem;
+    color: #34495e;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mainCTAButton {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    padding: 1.2rem 3rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
+    animation: pulseReward 2.5s infinite;
+}
+
+.mainCTAButton:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(52, 152, 219, 0.5);
+}
+
+.mainCTAButton:active {
+    transform: translateY(1px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+}
+
+/* Footer styling */
+.footer {
+    margin-top: 2rem;
+    width: 100%;
+    text-align: center;
+    padding: 2rem 0;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.footerLinks {
+    margin-top: 0.5rem;
+}
+
+.footerLinks a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footerLinks a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .step {
+        flex-direction: row;
+    }
+    
+    .heading {
+        font-size: 3.2rem;
+    }
+    
+    .subheading {
+        font-size: 1.4rem;
+    }
+    
+    .testimonials {
+        flex-direction: row;
+    }
+    
+    .features {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 3rem 1.5rem;
+    }
+    
+    .step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem;
+    }
+    
+    .stepNumber {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .stepContent {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .storeLinks {
+        justify-content: center;
+    }
+    
+    .heading {
+        font-size: 2.2rem;
+    }
+    
+    .highlightBox {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .highlightIcon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .featureSection {
+        margin-bottom: 3rem;
+    }
+    
+    .features {
+        flex-direction: column;
+    }
+    
+    .testimonialHeader {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .profileImageContainer {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .testimonialMeta {
+        align-items: center;
+    }
+    
+    .testimonial p {
+        text-align: center;
+        padding-left: 0;
+    }
+    
+    .testimonial p::before {
+        content: none;
+    }
+    
+    .ctaSection {
+        padding: 2rem 1.5rem;
+    }
+    
+    .ctaSection h2 {
+        font-size: 1.8rem;
+    }
+    
+    .mainCTAButton {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .benefitsList li {
+        font-size: 1rem;
+    }
 }
