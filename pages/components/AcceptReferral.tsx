@@ -187,7 +187,7 @@ export default function AcceptReferral({
               </div>
               <div className={styles.testimonialMeta}>
                 <div className={styles.stars}>★★★★★</div>
-                <div className={styles.testimonialAuthor}>Michael T.</div>
+                <div className={styles.testimonialAuthor}>Caitlyn O.</div>
               </div>
             </div>
             <p>&quot;Saturday coffee meetups have become the highlight of my week. I&apos;ve made genuine friends through Mesh!&quot;</p>
