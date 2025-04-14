@@ -993,6 +993,44 @@
     .benefitsList li {
         font-size: 1rem;
     }
+
+    /* Responsive adjustments for the new action steps */
+    .coreActions {
+        gap: 1.5rem; /* Reduce gap on smaller screens */
+    }
+
+    .actionStep {
+        flex-direction: column; /* Stack number and content */
+        align-items: flex-start;
+        padding: 1.5rem 1.2rem;
+    }
+
+    .stepNumber { /* Applied via className in actionStep */
+        margin-bottom: 1rem; /* Add space below number when stacked */
+        margin-right: 0;
+    }
+
+    .actionTitle {
+        font-size: 1.5rem;
+    }
+
+    .actionDescription {
+        font-size: 1.05rem;
+    }
+
+    .actionStep .storeLinks {
+        justify-content: center; /* Center store links */
+    }
+
+     .actionStep .claimButton {
+        width: 100%; /* Make button full width */
+        text-align: center;
+        padding: 1.1rem 2rem;
+    }
+
+    .benefitsListSmall {
+        font-size: 0.9rem;
+    }
 }
 
 /* Add subtle animations for scrolling experience */
@@ -1020,3 +1058,143 @@
         transform: translateY(0);
     }
 }
+
+/* NEW STYLES FOR CORE ACTION SECTION */
+.coreActions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 900px; /* Match existing max-width */
+    gap: 2.5rem; /* Space between the two action steps */
+    margin-bottom: 5rem; /* Space before the next section */
+    position: relative;
+    z-index: 2;
+}
+
+.actionStep {
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+    margin: 0;
+    position: relative;
+    padding: 2.5rem;
+    border-radius: 24px;
+    background-color: rgba(var(--neutral-white), 0.98); /* Slightly more opaque */
+    box-shadow:
+        0 20px 40px rgba(var(--primary-light-blue), 0.3), /* Enhanced shadow */
+        0 0 0 1px rgba(var(--neutral-gray), 0.1);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: slideInFromRight 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation-fill-mode: both;
+    border-left: 6px solid rgb(var(--contrast-navy)); /* Add a distinct left border */
+}
+
+.actionStep:nth-child(1) { animation-delay: 0.4s; border-left-color: rgb(var(--primary-light-blue)); } /* Different color for first step */
+.actionStep:nth-child(2) { animation-delay: 0.6s; border-left-color: rgb(var(--accent-lavender)); } /* Different color for second step */
+
+
+/* Reuse stepNumber style - applied via className */
+.actionStep .stepNumber {
+    min-width: 64px;
+    min-height: 64px;
+    background: linear-gradient(135deg, rgb(var(--contrast-navy)) 0%, rgb(113, 135, 175) 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 1.6rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 2rem;
+    flex-shrink: 0;
+    flex-grow: 0;
+    box-shadow:
+        0 10px 20px rgba(var(--contrast-navy), 0.3),
+        0 0 0 1px rgba(var(--neutral-gray), 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+.actionStep:nth-child(1) .stepNumber { background: linear-gradient(135deg, rgb(var(--primary-light-blue)) 0%, rgb(var(--secondary-light-blue)) 100%); }
+.actionStep:nth-child(2) .stepNumber { background: linear-gradient(135deg, rgb(var(--accent-lavender)) 0%, rgb(var(--primary-light-blue)) 100%); }
+
+
+.actionContent {
+    flex: 1;
+}
+
+.actionTitle {
+    margin: 0 0 0.8rem 0;
+    font-size: 1.7rem; /* Slightly larger title */
+    color: rgb(25, 25, 35);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.actionDescription {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.15rem; /* Clearer description font size */
+    color: rgb(35, 35, 45);
+    font-weight: 500;
+    line-height: 1.6;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.actionDescription strong {
+    color: rgb(var(--contrast-navy));
+    font-weight: 700;
+}
+
+/* Ensure store links are spaced correctly */
+.actionStep .storeLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.5rem; /* Add margin if needed */
+    justify-content: flex-start;
+}
+
+/* Style for the small benefits list under the verify button */
+.benefitsListSmall {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0 0; /* Margin top only */
+    font-size: 0.95rem;
+    color: rgb(50, 50, 60);
+}
+
+.benefitsListSmall li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+}
+
+.benefitIconSmall {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; /* Smaller icon */
+    height: 28px;
+    background: rgba(var(--primary-light-blue), 0.15);
+    border-radius: 8px;
+    margin-right: 0.8rem;
+    flex-shrink: 0;
+    font-size: 0.9rem; /* Adjust emoji size if needed */
+}
+
+.benefitsListSmall strong {
+    font-weight: 600;
+    color: rgb(35, 35, 45);
+}
+
+/* Make claim button more prominent if needed */
+.actionStep .claimButton {
+    margin-top: 1rem; /* Adjust spacing */
+     /* Add animation or stronger visual cues if desired */
+    /* e.g., animation: pulseReward 2s infinite; */
+}
+
+
+/* END NEW STYLES FOR CORE ACTION SECTION */

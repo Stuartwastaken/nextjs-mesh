@@ -41,30 +41,34 @@ export default function AcceptReferral({
     addAnimationDelays();
   }, []);
 
+  const friendName = name || 'Your friend';
+
   return (
     <div className={`${styles.container} ${poppins.className}`}>
       
       <div className={styles.heroSection}>
-        <h1 className={styles.heading}>Meet New Friends Over Coffee</h1>
+        <h1 className={styles.heading}>You&apos;re Invited to Mesh!</h1>
         <p className={styles.subheading}>
-          Join real people your age at local coffee shops every Saturday morning
+          Join friends for coffee meetups every Saturday.
         </p>
         
         <div className={styles.highlightBox}>
-          <div className={styles.highlightIcon}>☕</div>
+          <div className={styles.highlightIcon}>💌</div>
           <div className={styles.highlightContent}>
-           <p><strong>{name ? name : 'Someone'}</strong> has invited you to join their Mesh community!</p>
+           <p><strong>{friendName}</strong> invited you to join Mesh!</p>
           </div>
         </div>
       </div>
 
-      <div className={styles.steps}>
-        {/* Step 1 */}
-        <div className={styles.step} id="step-1">
-          <div className={styles.stepNumber}>1</div>
-          <div className={styles.stepContent}>
-            <h3 className={styles.stepTitle}>Download Mesh</h3>
-            <p>Get the app that&apos;s connecting people in your city</p>
+      {/* --- NEW CORE ACTION SECTION --- */}
+      <div className={styles.coreActions}>
+
+        {/* Step 1: Download & Setup */}
+        <div className={styles.actionStep} id="action-step-1">
+           <div className={styles.stepNumber}>1</div>
+           <div className={styles.actionContent}>
+            <h2 className={styles.actionTitle}>Get the App</h2>
+            <p className={styles.actionDescription}>First, download Mesh and <strong>create your profile</strong> in the app.</p>
             <div className={styles.storeLinks}>
               <div className={styles.imgWrapper}>
                 <a
@@ -100,49 +104,42 @@ export default function AcceptReferral({
                 </a>
               </div>
             </div>
-          </div>
+           </div>
         </div>
 
-        {/* Step 2 */}
-        <div className={styles.step} id="step-2">
-          <div className={styles.stepNumber}>2</div>
-          <div className={styles.stepContent}>
-            <h3 className={styles.stepTitle}>Create Your Profile</h3>
-            <p>Tell us about yourself and your interests so we can match you with the perfect group</p>
-          </div>
-        </div>
-
-        {/* Step 3 */}
-        <div className={styles.step} id="step-3">
-          <div className={styles.stepNumber}>3</div>
-          <div className={styles.stepContent}>
-            <h3 className={styles.stepTitle}>Verify & Unlock Benefits</h3>
-            <p>Return to this page after creating your account and click below to:</p>
-            <ul className={styles.benefitsList}>
-              <li>
-                <span className={styles.benefitIcon}>🎁</span>
-                <span>Send a reward to <strong>{name ? name : 'your friend'}</strong> for inviting you</span>
-              </li>
-              <li>
-                <span className={styles.benefitIcon}>✨</span>
-                <span>Unlock your 2-week free trial of Mesh</span>
-              </li>
-              <li>
-                <span className={styles.benefitIcon}>☕</span>
-                <span>Get your first invite to a Saturday coffee meetup</span>
-              </li>
-            </ul>
-            {/* The button that triggers the deep link */}
-            <button 
-              className={styles.claimButton} 
+        {/* Step 2: Verify */}
+        <div className={styles.actionStep} id="action-step-2">
+           <div className={styles.stepNumber}>2</div>
+           <div className={styles.actionContent}>
+            <h2 className={styles.actionTitle}>Verify Your Referral & Add as a Friend</h2>
+            <p className={styles.actionDescription}>
+              <strong>Important:</strong> After creating your profile in the app, <strong>return to this page</strong> and tap the button below.
+            </p>
+            <button
+              className={styles.claimButton} // Reuse existing style, maybe enhance later
               onClick={handleClaimRewards}
               aria-label="Verify referral and claim benefits"
             >
               Verify Referral & Claim Benefits
             </button>
-          </div>
+             <ul className={styles.benefitsListSmall}>
+                <li>
+                    <span className={styles.benefitIconSmall}>🎁</span>
+                    <span>Sends a reward to <strong>{friendName}</strong></span>
+                </li>
+                <li>
+                    <span className={styles.benefitIconSmall}>✨</span>
+                    <span>Unlocks your 2-week free trial</span>
+                </li>
+                <li>
+                    <span className={styles.benefitIconSmall}>☕</span>
+                    <span>Gets your first coffee meetup invite</span>
+                </li>
+            </ul>
+           </div>
         </div>
       </div>
+      {/* --- END NEW CORE ACTION SECTION --- */}
       
       <div className={styles.featureSection}>
         <h2 className={styles.featureSectionHeading}>How Mesh Works</h2>
@@ -210,9 +207,9 @@ export default function AcceptReferral({
       <div className={styles.ctaSection} id="cta-section">
         <h2>Ready to meet new friends over coffee?</h2>
         <p>Download the app now and establish roots in your community!</p>
-        <button 
-          className={styles.mainCTAButton} 
-          onClick={handleClaimRewards}
+        <button
+          className={styles.mainCTAButton}
+          onClick={() => document.getElementById('action-step-1')?.scrollIntoView({ behavior: 'smooth' })} // Scrolls up to download links
           aria-label="Get started with Mesh"
         >
           Get Started Now
