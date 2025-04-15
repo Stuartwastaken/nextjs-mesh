@@ -1031,6 +1031,60 @@
     .benefitsListSmall {
         font-size: 0.9rem;
     }
+
+    .invitationHighlight {
+        padding: 0.8rem 1rem;
+        margin: 1rem auto 2rem;
+    }
+    
+    .invitationHighlight p {
+        font-size: 1.1rem;
+    }
+
+    .coreActionBlock {
+        padding: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .primaryActionButton {
+        padding: 1.2rem 2rem;
+        font-size: 1.2rem;
+        min-width: 250px;
+    }
+
+    .instructions {
+        padding: 1rem;
+        font-size: 0.95rem;
+    }
+    .instructionSteps {
+         padding-left: 1.5rem;
+    }
+
+    .downloadHeading {
+        font-size: 1rem;
+    }
+    .downloadSection .storeLinks {
+        gap: 1rem;
+        flex-direction: column; /* Stack logos vertically */
+        align-items: center;
+    }
+
+    .benefitsSection {
+        padding: 1.5rem;
+         margin-bottom: 3rem;
+    }
+    .benefitsHeading {
+        font-size: 1.1rem;
+    }
+     .benefitsSection .benefitsListSmall li {
+        font-size: 0.95rem;
+    }
+      .benefitsSection .benefitIconSmall {
+        width: 28px;
+        height: 28px;
+        margin-right: 0.8rem;
+        font-size: 0.9rem;
+    }
 }
 
 /* Add subtle animations for scrolling experience */
@@ -1198,3 +1252,213 @@
 
 
 /* END NEW STYLES FOR CORE ACTION SECTION */
+
+/* Style for the friend invitation text */
+.invitationHighlight {
+    background-color: rgba(var(--primary-light-blue), 0.1);
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    margin: 1.5rem auto 2.5rem; /* Center and add spacing */
+    max-width: 600px; /* Control width */
+    text-align: center;
+    border-left: 4px solid rgb(var(--primary-light-blue));
+    box-shadow: 0 5px 15px rgba(var(--primary-light-blue), 0.15);
+}
+
+.invitationHighlight p {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: rgb(35, 35, 45);
+}
+
+.invitationHighlight strong {
+    font-weight: 700;
+    color: rgb(var(--contrast-navy));
+}
+
+/* Container for the main action */
+.coreActionBlock {
+    width: 100%;
+    max-width: 700px; /* Adjust as needed */
+    margin: 0 auto 4rem; /* Center and provide bottom margin */
+    padding: 2.5rem;
+    background-color: rgba(var(--neutral-white), 0.98);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(var(--primary-light-blue), 0.25), 0 0 0 1px rgba(var(--neutral-gray), 0.1);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 0.8s ease-out; /* Use a simple fade-up */
+    animation-fill-mode: both;
+    animation-delay: 0.3s;
+}
+
+/* The main button */
+.primaryActionButton {
+    /* Inherit from .claimButton or .mainCTAButton styles, but make it bigger */
+    background: linear-gradient(135deg, rgb(var(--contrast-navy)) 0%, rgb(113, 135, 175) 100%);
+    color: white;
+    border: none;
+    padding: 1.5rem 3rem; /* Larger padding */
+    font-size: 1.4rem; /* Larger font */
+    margin: 0 auto 1.5rem; /* Center and add bottom margin */
+    font-weight: 700; /* Bold */
+    border-radius: 20px; /* Slightly larger radius */
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        0 15px 30px rgba(var(--contrast-navy), 0.3),
+        0 0 0 1px rgba(var(--contrast-navy), 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    z-index: 1;
+    display: inline-block; /* Ensure margin auto works */
+    min-width: 300px; /* Ensure it has some width */
+    animation: pulseReward 2.5s infinite; /* Make it pulse slightly */
+    animation-delay: 1s; /* Start pulsing after load */
+}
+
+.primaryActionButton:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow:
+        0 20px 40px rgba(var(--contrast-navy), 0.4),
+        0 0 0 1px rgba(var(--contrast-navy), 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 20px rgba(var(--accent-lavender), 0.4);
+}
+
+.primaryActionButton:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 10px 20px rgba(var(--contrast-navy), 0.2);
+}
+
+/* Instruction text styling */
+.instructions {
+    margin: 1.5rem auto 2.5rem; /* Spacing around instructions */
+    padding: 1.5rem;
+    background-color: rgba(var(--secondary-light-blue), 0.15); /* Subtle background */
+    border-radius: 16px;
+    border: 1px dashed rgba(var(--neutral-gray), 0.3); /* Dashed border */
+    max-width: 550px; /* Control width */
+    text-align: left; /* Align text left for readability */
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgb(50, 50, 60);
+}
+
+.instructions p {
+    margin-bottom: 0.8rem;
+}
+.instructions p:last-of-type {
+    margin-bottom: 0.5rem; /* Less space before the list */
+}
+
+.instructions strong {
+    font-weight: 600;
+    color: rgb(35, 35, 45);
+}
+
+.instructionSteps {
+    list-style-type: decimal; /* Use numbers */
+    padding-left: 1.8rem; /* Indent list */
+    margin-top: 0.5rem;
+}
+
+.instructionSteps li {
+    margin-bottom: 0.5rem;
+}
+
+/* Download section styling */
+.downloadSection {
+    margin-top: 2rem; /* Space above download links */
+    border-top: 1px solid rgba(var(--neutral-gray), 0.2); /* Separator line */
+    padding-top: 2rem;
+}
+
+.downloadHeading {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgb(35, 35, 45);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Center store links within the download section */
+.downloadSection .storeLinks {
+    justify-content: center; /* Center the logos */
+    gap: 2rem; /* More space between logos */
+}
+
+/* Benefits section */
+.benefitsSection {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto 4rem; /* Spacing below core block */
+    padding: 2rem;
+    background-color: rgba(var(--accent-lavender), 0.08); /* Very subtle background */
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+     animation: fadeInUp 0.8s ease-out;
+     animation-fill-mode: both;
+     animation-delay: 0.5s; /* Animate slightly after core block */
+}
+
+.benefitsHeading {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgb(35, 35, 45);
+    margin-bottom: 1.5rem;
+}
+
+/* Reuse benefitsListSmall styles if they exist and are suitable, or redefine */
+.benefitsSection .benefitsListSmall {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block; /* Allow text-align center to work */
+    text-align: left; /* Align list items left */
+}
+
+.benefitsSection .benefitsListSmall li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: rgb(50, 50, 60);
+    font-weight: 500;
+}
+
+.benefitsSection .benefitIconSmall {
+     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; /* Slightly larger */
+    height: 32px;
+    background: rgba(var(--primary-light-blue), 0.15);
+    border-radius: 10px;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    font-size: 1rem;
+}
+
+.benefitsSection .benefitsListSmall strong {
+    font-weight: 600;
+    color: rgb(35, 35, 45);
+}
+
+/* Adjust existing animations if needed */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- END NEW STYLES --- */
+
+/* Ensure old step/action styles are removed or overridden */
+.coreActions, .actionStep, .actionTitle, .actionDescription { display: none; } /* Hide old elements */
+
+/* ... ensure animations apply to new elements if needed ... */
