@@ -118,19 +118,19 @@ export default function AcceptReferral({
         <h2 className={styles.featureSectionHeading}>How Mesh Works</h2>
         <div className={styles.features}>
           <div className={styles.feature} id="feature-1">
-            <div className={styles.featureIcon}>👋</div>
-            <h3>Meet in Person</h3>
-            <p>Connect with 3 other people at local coffee shops</p>
+            <div className={styles.featureIcon}>☕</div>
+            <h3>Meet In Person</h3>
+            <p>Connect with a small group at local coffee shops.</p>
           </div>
           <div className={styles.feature} id="feature-2">
-            <div className={styles.featureIcon}>🕙</div>
-            <h3>Every Saturday at 10am</h3>
-            <p>Regular meetups make it easy to fit into your schedule</p>
+            <div className={styles.featureIcon}>🗓️</div>
+            <h3>Every Saturday Morning</h3>
+            <p>Consistent 10am meetups fit easily into your weekend.</p>
           </div>
           <div className={styles.feature} id="feature-3">
-            <div className={styles.featureIcon}>🏙️</div>
-            <h3>Local Community</h3>
-            <p>Meet people who live in your neighborhood</p>
+            <div className={styles.featureIcon}>📍</div>
+            <h3>Your Local Community</h3>
+            <p>Build connections with people right in your neighborhood.</p>
           </div>
         </div>
       </div>

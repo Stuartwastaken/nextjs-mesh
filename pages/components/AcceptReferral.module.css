@@ -3,7 +3,7 @@
     background: linear-gradient(135deg, rgb(var(--neutral-white)) 0%, rgb(var(--secondary-light-blue)) 100%);
     color: rgb(35, 35, 45);
     /* min-height: 100vh; */ /* Remove min-height if it should fit content */
-    padding: clamp(2rem, 8vh, 4rem) clamp(1rem, 5vw, 3rem); /* Reduced max padding slightly */
+    padding: clamp(2.5rem, 8vh, 5rem) clamp(1.5rem, 5vw, 4rem); /* Slightly more padding */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,7 +13,7 @@
     overflow: hidden; /* Ensure content clips to rounded corners */
     border-radius: 24px; /* Add rounded corners */
     max-width: 1000px; /* Optional: Constrain width */
-    margin: 2rem auto; /* Add margin when used as a component */
+    margin: 3rem auto; /* More vertical margin */
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Add shadow for depth */
 }
 
@@ -69,7 +69,7 @@
     text-align: center;
     width: 100%;
     max-width: 900px;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem; /* Ensure adequate space below hero */
     position: relative;
     z-index: 2;
     animation: fadeUp 0.9s ease-out;
@@ -82,9 +82,9 @@
 
 /* Elegant heading with sophisticated text gradient */
 .heading {
-    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-size: clamp(2.5rem, 5.5vw, 3.5rem); /* Slightly larger heading */
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
     background: linear-gradient(90deg, rgb(var(--contrast-navy)), rgb(113, 135, 175));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -114,9 +114,9 @@
 /* Subheading style with enhanced readability */
 .subheading {
     text-align: center;
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    font-size: clamp(1.15rem, 2.6vw, 1.5rem); /* Slightly larger subheading */
     color: rgb(35, 35, 45);
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
     max-width: 650px;
     font-weight: 500;
     margin-left: auto;
@@ -476,9 +476,9 @@
 
 /* Sophisticated section heading */
 .featureSectionHeading {
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-size: clamp(2rem, 4.5vw, 2.8rem); /* Adjust section heading size */
     font-weight: 700;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem; /* More space below heading */
     background: linear-gradient(90deg, rgb(var(--contrast-navy)), rgb(113, 135, 175));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -505,20 +505,20 @@
 .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2.5rem;
-    margin-top: 4rem;
+    gap: 3rem; /* Increase gap */
+    margin-top: 4rem; /* Ensure consistent top margin */
     width: 100%;
 }
 
 /* Single feature card with enhanced styling */
 .feature {
     background: rgba(var(--neutral-white), 0.95);
-    padding: 2.5rem;
+    padding: 3rem; /* Increased padding */
     border-radius: 24px;
     box-shadow: 
         0 20px 40px rgba(var(--primary-light-blue), 0.2),
         0 0 0 1px rgba(var(--neutral-gray), 0.1);
-    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.3s ease-out; /* Slightly faster transition */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -542,16 +542,14 @@
 
 /* Elegant hover effect */
 .feature:hover {
-    transform: translateY(-8px);
-    box-shadow: 
-        0 30px 60px rgba(var(--accent-lavender), 0.25),
-        0 0 0 1px rgba(var(--neutral-gray), 0.1);
+    transform: translateY(-5px); /* Slightly less lift */
+    box-shadow: 0 25px 50px rgba(var(--accent-lavender), 0.2), 0 0 0 1px rgba(var(--neutral-gray), 0.1); /* Adjust shadow */
 }
 
 /* Feature icon styling */
 .featureIcon {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 2.8rem; /* Adjust if needed for Unicode chars */
+    margin-bottom: 1.8rem; /* More space below icon */
     background: linear-gradient(135deg, rgba(var(--primary-light-blue), 0.2), rgba(var(--accent-lavender), 0.2));
     height: 70px;
     width: 70px;
@@ -572,8 +570,8 @@
 
 /* Feature title styling */
 .feature h3 {
-    margin: 1rem 0;
-    font-size: 1.4rem;
+    margin: 0.8rem 0;
+    font-size: 1.5rem; /* Ensure clear heading size */
     color: rgb(25, 25, 35);
     font-weight: 600;
 }
@@ -581,7 +579,7 @@
 /* Feature description styling */
 .feature p {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     color: rgb(35, 35, 45);
     line-height: 1.6;
     font-weight: 500;
@@ -599,9 +597,9 @@
 
 /* Testimonial heading */
 .testimonialHeading {
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-size: clamp(2rem, 4.5vw, 2.8rem); /* Adjust section heading size */
     font-weight: 700;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem; /* More space below heading */
     background: linear-gradient(90deg, rgb(var(--contrast-navy)), rgb(113, 135, 175));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -628,20 +626,20 @@
 .testimonials {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2.5rem;
-    margin-top: 4rem;
+    gap: 3rem; /* Increase gap */
+    margin-top: 4rem; /* Ensure consistent top margin */
     width: 100%;
 }
 
 /* Single testimonial card with enhanced styling */
 .testimonial {
     background: rgba(var(--neutral-white), 0.95);
-    padding: 2.5rem;
+    padding: 3rem; /* Increased padding */
     border-radius: 24px;
     box-shadow: 
         0 20px 40px rgba(var(--primary-light-blue), 0.2),
         0 0 0 1px rgba(var(--neutral-gray), 0.1);
-    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.3s ease-out; /* Slightly faster transition */
     position: relative;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -654,10 +652,8 @@
 
 /* Testimonial hover effect */
 .testimonial:hover {
-    transform: translateY(-8px);
-    box-shadow: 
-        0 30px 60px rgba(var(--accent-lavender), 0.25),
-        0 0 0 1px rgba(var(--neutral-gray), 0.1);
+    transform: translateY(-5px); /* Slightly less lift */
+    box-shadow: 0 25px 50px rgba(var(--accent-lavender), 0.2), 0 0 0 1px rgba(var(--neutral-gray), 0.1); /* Adjust shadow */
 }
 
 /* Stylish quote mark */
@@ -756,7 +752,7 @@
 /* Testimonial text styling */
 .testimonial p {
     position: relative;
-    font-size: 1.1rem;
+    font-size: 1.15rem; /* Slightly larger quote text */
     line-height: 1.7;
     color: rgb(35, 35, 45);
     margin-top: 1.5rem;
@@ -771,8 +767,8 @@
 .ctaSection {
     width: 100%;
     max-width: 900px;
-    padding: 4rem 3rem;
-    margin: 5rem 0 3rem;
+    padding: 4.5rem 3rem; /* Increase padding */
+    margin: 5rem 0 4rem;
     background: linear-gradient(135deg, rgba(var(--contrast-navy), 0.97), rgba(var(--accent-lavender), 0.95));
     border-radius: 30px;
     color: white;
@@ -858,7 +854,7 @@
     width: 100%;
     max-width: 900px;
     text-align: center;
-    padding: 3rem 0;
+    padding: 3rem 0 2rem; /* Adjust padding */
     color: rgb(50, 50, 60);
     position: relative;
     z-index: 2;
@@ -911,6 +907,7 @@
 @media (max-width: 600px) {
     .container {
         padding: 2rem 1.5rem;
+        margin: 2rem auto;
     }
     
     .step {
@@ -953,6 +950,7 @@
     
     .featureSection {
         padding: 2rem 1rem;
+        margin-bottom: 3rem;
     }
     
     .features {
@@ -983,6 +981,7 @@
     
     .ctaSection {
         padding: 3rem 1.5rem;
+        margin-bottom: 3rem;
     }
     
     .ctaSection h2 {
@@ -1046,7 +1045,7 @@
     }
 
     .coreActionBlock {
-        padding: 1.5rem;
+        padding: 2rem;
         margin-bottom: 3rem;
     }
 
@@ -1057,11 +1056,10 @@
     }
 
     .instructions {
-        padding: 1rem;
-        font-size: 0.95rem;
+        padding: 1.2rem;
     }
     .instructionSteps {
-         padding-left: 1.5rem;
+         padding-left: 2rem;
     }
 
     .downloadHeading {
@@ -1074,7 +1072,7 @@
     }
 
     .benefitsSection {
-        padding: 1.5rem;
+        padding: 2rem;
          margin-bottom: 3rem;
     }
     .benefitsHeading {
@@ -1262,7 +1260,7 @@
     background-color: rgba(var(--primary-light-blue), 0.1);
     padding: 1rem 1.5rem;
     border-radius: 16px;
-    margin: 1.5rem auto 2.5rem; /* Center and add spacing */
+    margin: 1.5rem auto 3rem; /* Center and add spacing */
     max-width: 600px; /* Control width */
     text-align: center;
     border-left: 4px solid rgb(var(--primary-light-blue));
@@ -1286,7 +1284,7 @@
     width: 100%;
     max-width: 700px; /* Adjust as needed */
     margin: 0 auto 4rem; /* Center and provide bottom margin */
-    padding: 2.5rem;
+    padding: 3rem; /* Increased padding */
     background-color: rgba(var(--neutral-white), 0.98);
     border-radius: 24px;
     box-shadow: 0 20px 40px rgba(var(--primary-light-blue), 0.25), 0 0 0 1px rgba(var(--neutral-gray), 0.1);
@@ -1306,7 +1304,7 @@
     border: none;
     padding: 1.5rem 3rem; /* Larger padding */
     font-size: 1.4rem; /* Larger font */
-    margin: 0 auto 1.5rem; /* Center and add bottom margin */
+    margin: 0 auto 2rem; /* Center and add bottom margin */
     font-weight: 700; /* Bold */
     border-radius: 20px; /* Slightly larger radius */
     cursor: pointer;
@@ -1341,14 +1339,14 @@
 /* Instruction text styling */
 .instructions {
     margin: 1.5rem auto 2.5rem; /* Spacing around instructions */
-    padding: 1.5rem;
-    background-color: rgba(var(--secondary-light-blue), 0.15); /* Subtle background */
+    padding: 1.8rem; /* More padding inside */
+    background-color: rgba(var(--secondary-light-blue), 0.25); /* Slightly stronger tint */
     border-radius: 16px;
-    border: 1px dashed rgba(var(--neutral-gray), 0.3); /* Dashed border */
+    border: 1px solid rgba(var(--neutral-gray), 0.4); /* Make border solid but light */
     max-width: 550px; /* Control width */
     text-align: left; /* Align text left for readability */
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.65; /* Improve line spacing */
     color: rgb(50, 50, 60);
 }
 
@@ -1366,8 +1364,8 @@
 
 .instructionSteps {
     list-style-type: decimal; /* Use numbers */
-    padding-left: 1.8rem; /* Indent list */
-    margin-top: 0.5rem;
+    padding-left: 2rem; /* Slightly more indent */
+    margin-top: 0.8rem;
 }
 
 .instructionSteps li {
@@ -1376,9 +1374,9 @@
 
 /* Download section styling */
 .downloadSection {
-    margin-top: 2rem; /* Space above download links */
+    margin-top: 2.5rem; /* Space above download links */
     border-top: 1px solid rgba(var(--neutral-gray), 0.2); /* Separator line */
-    padding-top: 2rem;
+    padding-top: 2.5rem;
 }
 
 .downloadHeading {
@@ -1400,7 +1398,7 @@
     width: 100%;
     max-width: 700px;
     margin: 0 auto 4rem; /* Spacing below core block */
-    padding: 2rem;
+    padding: 2.5rem; /* Increased padding */
     background-color: rgba(var(--accent-lavender), 0.08); /* Very subtle background */
     border-radius: 20px;
     text-align: center;
