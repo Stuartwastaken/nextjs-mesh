@@ -45,7 +45,7 @@ export default function AcceptReferral({
     <div className={`${styles.container} ${poppins.className}`}>
       
       <div className={styles.heroSection}>
-        <h1 className={styles.heading}>You're Invited to Mesh!</h1>
+        <h1 className={styles.heading}>You&apos;re Invited to Mesh!</h1>
          <div className={styles.invitationHighlight}>
           <p><strong>{friendName}</strong> wants to connect on Mesh.</p>
         </div>
@@ -62,11 +62,11 @@ export default function AcceptReferral({
 
         <div className={styles.instructions}>
           <p>Tapping above opens Mesh.</p>
-          <p><strong>If you don't have the app yet:</strong></p>
+          <p><strong>If you don&apos;t have the app yet:</strong></p>
           <ol className={styles.instructionSteps}>
              <li>Download the app below.</li>
              <li>Create your profile <strong>in the app</strong>.</li>
-             <li><strong>Return to this page</strong> & tap the 'Accept' button again.</li>
+             <li><strong>Return to this page</strong> &amp; tap the &apos;Accept&apos; button again.</li>
           </ol>
         </div>
 
